@@ -1,5 +1,3 @@
- # -*- coding: utf-8 -*-
-
 import json
 import os
 
@@ -12,39 +10,59 @@ if not os.path.exists(CACHE):
     os.makedirs(CACHE)
 
     
-def lookup_data(sub_dir, name):
+def lookup_data(sub_dir, name, force_reload=False):
+    """Locates and saves a specific reference, and then returns the data.
+
+    If the resource desired is already cached, this function will return the
+    cached copy. However, data files can be forced to re-download using the
+    force_reload parameter. Reference are saved to the user's home directory 
+    in a folder "~/.pokebase".
+    """
 
     cwd = os.getcwd()
     os.chdir(CACHE)
 
+    # Create the data directory if it does not exist.
     if not os.path.exists(sub_dir):
         lookup_resource(sub_dir)
-
+    
+    # Go to that directory.
     os.chdir(sub_dir)
 
+    # Some resources don't have names, so use their ID.
     if isinstance(name, int):
         name = str(name)
 
-    if os.path.exists('.'.join([name, 'json'])):
+    if os.path.exists('.'.join([name, 'json'])) and not force_reload:
+        # If the resources wanted already exists, load it from disk.
+
         with open('.'.join([name, 'json']), 'r') as file:
             data = json.load(file)
     else:
+        # If it doesn't exist, go download and save the resources.
         r = requests.get('/'.join([BASE_URL, sub_dir, name]))
         r.raise_for_status()
         data = json.loads(r.text)
         with open('.'.join([name, 'json']), 'w') as file:
             json.dump(data, file, indent=2)
 
-    os.chdir(cwd)
+    os.chdir(cwd)  # Return to original working directory.
     return data
 
 
-def lookup_resource(name):
+def lookup_resource(name, force_reload=False):
+    """Returns a resource with all of the data references in the category.
+    
+    If the resource desired is already cached, this function will return the
+    cached copy. However, data files can be forced to re-download using the
+    force_reload parameter. Reference are saved to the user's home directory 
+    in a folder "~/.pokebase".
+    """
 
     cwd = os.getcwd()
     os.chdir(CACHE)
 
-    if os.path.exists(name):
+    if os.path.exists(name) and not force_reload:
         os.chdir(name)
 
         with open('resource.json', 'r') as file:
@@ -60,6 +78,7 @@ def lookup_resource(name):
         resource = json.loads(r.text)
 
         if resource['count'] != len(resource['results']):
+            # We got multiple pages of results; we want ALL of them.
             items = resource['count']
             url = '/'.join([BASE_URL, name, '?limit={}'.format(items)])
 
@@ -75,17 +94,24 @@ def lookup_resource(name):
 
 
 def make_obj(d):
+    """Takes a dictionary and returns a NamedAPIResource or APIMetadata.
+
+    The names and values of the data will match exactly with those found 
+    in the online docs at https://pokeapi.co/docsv2/ .
+    """
     
     if 'url' in d.keys():
         url = d['url']
-        name = url.split('/')[-2]
-        location = url.split('/')[-3]
+        name = url.split('/')[-2]      # Name of the data.
+        location = url.split('/')[-3]  # Where the data is located.
         return NamedAPIResource(location, name, False)
     else:
         return APIMetadata(d)
     
 
 class NamedAPIResource:
+    """Core API class, used for accessing the bulk of the data.
+    """
 
     def __init__(self, resource, name, lookup=True):
         
@@ -93,31 +119,33 @@ class NamedAPIResource:
         n = APIResourceList(r).id_to_name(name)
         
         self.__data = {'type': r, 'name': n,
-               'url': '/'.join([BASE_URL, r, n])}
+                       'url': '/'.join([BASE_URL, r, n])}
         
         if lookup:
             self.load()
-            self.__isloaded = True
+            self.__is_loaded = True
         else:
-            self.__isloaded = False
+            self.__is_loaded = False
             
     def __getattr__(self, attr):
         
-        if not self.__isloaded:
+        if not self.__is_loaded:
             self.load()
-            self.__isloaded = True
+            self.__is_loaded = True
             
             return self.__getattribute__(attr)
         
         else:
-            raise AttributeError(f'{type(self)} object has no attribute {attr}')
+            t = type(self)
+            raise AttributeError(f'{t} object has no attribute {attr}')
     
     def __str__(self):
         return f'{self.name}'
         
     def load(self):
         
-        self.__data.update(lookup_data(self.__data['type'], self.__data['name']))
+        self.__data.update(lookup_data(self.__data['type'], 
+                                       self.__data['name']))
 
         for k, v in self.__data.items():
             
@@ -129,10 +157,17 @@ class NamedAPIResource:
             else:
                 self.__setattr__(k, v)
         
-        self.__isloaded = True
+        self.__is_loaded = True
 
         
 class APIResourceList:
+    """Class for a data container.
+
+    Used to access data corresponding to a category, rather than an individual
+    reference. Ex. APIResourceList('berry') gives information about all 
+    berries, such as which ID's correspond to which berry names, and 
+    how many berries there are.
+    """
 
     def __init__(self, name):
 
@@ -157,7 +192,6 @@ class APIResourceList:
             if res['url'].split('/')[-2] == str(id_):
                 return res.get('name', res['url'].split('/')[-2])
 
-
     @property
     def names(self):
         for result in self.__results:
@@ -170,6 +204,11 @@ class APIResourceList:
 
             
 class APIMetadata:
+    """Helper class for smaller references.
+
+    Used for "Common Models" classes and NamedAPIResource helper classes.
+    https://pokeapi.co/docsv2/#common-models
+    """
 
     def __init__(self, data):
         self.__data = data
@@ -183,4 +222,3 @@ class APIMetadata:
                 
     def __str__(self):
         return str(self.__data)
-            
