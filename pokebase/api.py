@@ -8,6 +8,19 @@ BASE_URL = 'http://pokeapi.co/api/v2'
 CACHE = os.path.join(os.path.expanduser('~'), '.pokebase')
 if not os.path.exists(CACHE):
     os.makedirs(CACHE)
+RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
+             'characteristic', 'contest-effect', 'contest-type', 'egg-group',
+             'encounter-condition', 'encounter-condition-value',
+             'encounter-method', 'evolution-chain', 'evolution-trigger',
+             'gender', 'generation', 'growth-rate', 'item', 'item-attribute',
+             'item-category', 'item-fling-effect', 'item-pocket', 'language',
+             'location', 'location-area', 'machine', 'move', 'move-ailment',
+             'move-battle-style', 'move-category', 'move-damage-class',
+             'move-learn-method', 'move-target', 'nature', 'pal-park-area',
+             'pokeathlon-stat', 'pokedex', 'pokemon', 'pokemon-color',
+             'pokemon-form', 'pokemon-habitat', 'pokemon-shape',
+             'pokemon-species', 'region', 'stat', 'super-contest-effect',
+             'type', 'version', 'version-group']
 
     
 def lookup_data(sub_dir, name, force_reload=False):
@@ -59,6 +72,9 @@ def lookup_resource(name, force_reload=False):
     in a folder "~/.pokebase".
     """
 
+    if name not in RESOURCES:
+        raise ValueError(f'resource not found ({name}), check spelling')
+
     cwd = os.getcwd()
     os.chdir(CACHE)
 
@@ -97,16 +113,21 @@ def make_obj(d):
     """Takes a dictionary and returns a NamedAPIResource or APIMetadata.
 
     The names and values of the data will match exactly with those found 
-    in the online docs at https://pokeapi.co/docsv2/ .
+    in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data 
+    may be of a standard type, such as an integer or string. For those cases, 
+    the input value is simply returned, unchanged.
     """
-    
-    if 'url' in d.keys():
-        url = d['url']
-        name = url.split('/')[-2]      # Name of the data.
-        location = url.split('/')[-3]  # Where the data is located.
-        return NamedAPIResource(location, name, False)
+
+    if isinstance(d, dict):
+        if 'url' in d.keys():
+            url = d['url']
+            name = url.split('/')[-2]      # Name of the data.
+            location = url.split('/')[-3]  # Where the data is located.
+            return NamedAPIResource(location, name, False)
+        else:
+            return APIMetadata(d)
     else:
-        return APIMetadata(d)
+        return d
     
 
 class NamedAPIResource:
@@ -120,6 +141,8 @@ class NamedAPIResource:
         
         self.__data = {'type': r, 'name': n,
                        'url': '/'.join([BASE_URL, r, n])}
+
+        self.resource_type = r
         
         if lookup:
             self.load()
@@ -173,6 +196,7 @@ class APIResourceList:
 
         response = lookup_resource(name)
 
+        self.name = name
         self.__results = [i for i in response['results']]
         self.count = response['count']
 
@@ -186,11 +210,17 @@ class APIResourceList:
         return str(self.__results)
     
     def id_to_name(self, id_):
+
+        if self.name == 'location-area':
+            return str(id_)  # location-areas can't be looked up by name.
+
         for res in self.__results:
             if res.get('name', res['url'].split('/')[-2]) == id_:
-                return id_
+                return str(id_)
             if res['url'].split('/')[-2] == str(id_):
                 return res.get('name', res['url'].split('/')[-2])
+        else:
+            raise ValueError(f'resource not found ({id_}), check spelling')
 
     @property
     def names(self):

@@ -26,7 +26,7 @@ def super_contest_effect(id_):
 
 
 def encounter_method(id_or_name):
-    return NamedAPIResource('encounter_method', id_or_name)
+    return NamedAPIResource('encounter-method', id_or_name)
 
 
 def encounter_condition(id_or_name):
