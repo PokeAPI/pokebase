@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import json
 import os
 
@@ -73,7 +76,8 @@ def lookup_resource(name, force_reload=False):
     """
 
     if name not in RESOURCES:
-        raise ValueError(f'resource not found ({name}), check spelling')
+        raise ValueError('resource not found ({}), check spelling'
+                         .format(name))
 
     cwd = os.getcwd()
     os.chdir(CACHE)
@@ -130,7 +134,7 @@ def make_obj(d):
         return d
     
 
-class NamedAPIResource:
+class NamedAPIResource(object):
     """Core API class, used for accessing the bulk of the data.
     """
 
@@ -159,11 +163,11 @@ class NamedAPIResource:
             return self.__getattribute__(attr)
         
         else:
-            t = type(self)
-            raise AttributeError(f'{t} object has no attribute {attr}')
-    
+            raise AttributeError('{} object has no attribute {}'
+                                 .format(type(self), attr))
+
     def __str__(self):
-        return f'{self.name}'
+        return str(self.name)
         
     def load(self):
         
@@ -183,7 +187,7 @@ class NamedAPIResource:
         self.__is_loaded = True
 
         
-class APIResourceList:
+class APIResourceList(object):
     """Class for a data container.
 
     Used to access data corresponding to a category, rather than an individual
@@ -220,7 +224,8 @@ class APIResourceList:
             if res['url'].split('/')[-2] == str(id_):
                 return res.get('name', res['url'].split('/')[-2])
         else:
-            raise ValueError(f'resource not found ({id_}), check spelling')
+            raise ValueError('resource not found ({}), check spelling'
+                             .format(id_))
 
     @property
     def names(self):
@@ -233,7 +238,7 @@ class APIResourceList:
             yield result['url']
 
             
-class APIMetadata:
+class APIMetadata(object):
     """Helper class for smaller references.
 
     Used for "Common Models" classes and NamedAPIResource helper classes.

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from .loaders import *
 from .api import NamedAPIResource, APIMetadata, APIResourceList
 
