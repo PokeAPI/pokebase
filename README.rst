@@ -11,9 +11,9 @@ pokebase is a simple but powerful Python interface to the `PokéAPI database <ht
 Installation
 ============
 
-`pip install pokebase`
+``pip install pokebase``
 
-It can't get much easier than that
+It can't get much easier than that.
 
 =====
 Usage
@@ -42,10 +42,10 @@ pokebase currently (officially) supports Python 2.7 and 3.6 versions.
 Testing
 =======
 
-Python unittests are in a separate `tests` directory, and can be run via `python -m tests.test_pokebase`.
+Python unittests are in a separate ``tests`` directory, and can be run via ``python -m tests.test_pokebase``.
 
 
 Important
 ---------
 
-The quick data lookup for a Pokémon type, is `pokebase.type_('type-name')`, not `pokebase.type('type-name')`. This is because of a naming conflict with the Python language.
+The quick data lookup for a Pokémon type, is ``pokebase.type_('type-name')``, not ``pokebase.type('type-name')``. This is because of a naming conflict with the Python language.
