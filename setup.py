@@ -7,7 +7,7 @@ setup(
   author='Greg Hilmes',
   author_email='99hilmes.g@gmail.com',
   url='https://github.com/GregHilmes/pokebase',
-  download_url='https://github.com/GregHilmes/pokebase/archive/v1.0.tar.gz',
+  download_url='https://github.com/GregHilmes/pokebase/archive/v1.1.tar.gz',
   keywords=['database', 'pokemon', 'wrapper'],
   classifiers=[],
 )
