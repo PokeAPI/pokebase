@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
     name='pokebase',
     packages=['pokebase'],
-    version='v1.0',
+    version='1.0',
     description='A Python wrapper for the friendly PokeAPI database',
     author='Greg Hilmes',
     author_email='99hilmes.g@gmail.com',
