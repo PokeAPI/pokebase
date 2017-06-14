@@ -10,9 +10,9 @@ setup(
     download_url='https://github.com/GregHilmes/pokebase/archive/1.0.0.tar.gz',
     keywords=['database', 'pokemon', 'wrapper'],
     install_requires=['requests'],
-    license='BSD-3-Clause',
+    license='BSD License',
     classifiers=[
-        'license :: BSD 3 Clause License',
+        'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6'
     ]
