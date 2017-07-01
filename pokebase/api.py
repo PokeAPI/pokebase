@@ -1,6 +1,30 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""pokebase/api.py - Main file for program interface with the API.
+
+To access the data in the API, create a new `NamedAPIResource` instance, the
+data for that resource can be accessed through that instance's attributes.
+
+>>> import pokebase as pb
+>>> squirtle = pb.NamedAPIResource('pokemon', 'squirtle')
+>>> squirtle.weight
+90
+>>>
+
+`pokebase.loaders` contains convenient shortcuts for requesting data without
+having to specify the first parameter.
+
+Data about each API resource will come in the form of basic Python types, like
+`int` and `str`, as well as of APIMetadata type, which acts as a glorified
+dictionary allowing attribute lookup via the dot operator, rather than normal
+`dict` lookup with square brackets and a string.
+
+By default, this wrapper will cache all API data in `~/.pokebase`. To change
+this behavior, call `set_cache('/abs/or/rel/filepath')` before you make any API
+calls.
+"""
+
 import json
 import os
 
@@ -25,6 +49,30 @@ RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'pokemon-species', 'region', 'stat', 'super-contest-effect',
              'type', 'version', 'version-group']
 
+
+def set_cache(new_path):
+    """Simple function to change the cache location.
+
+    `new_path` can be an absolute or relative path. If the directory does not
+    exist yet, this function will create it.
+
+    If you are going to change the cache directory, this function should be
+    called at the top of your script, before you make any calls to the API.
+    This is to avoid duplicate files and excess API calls.
+
+    :param new_path: relative or absolute path to the desired new cache
+    directory
+    :return: None
+    """
+    global CACHE
+
+    CACHE = os.path.abspath(new_path)
+
+    if not os.path.exists(CACHE):
+        os.makedirs(CACHE)
+
+    return None
+
     
 def lookup_data(sub_dir, name, force_reload=False):
     """Locates and saves a specific reference, and then returns the data.
@@ -32,7 +80,12 @@ def lookup_data(sub_dir, name, force_reload=False):
     If the resource desired is already cached, this function will return the
     cached copy. However, data files can be forced to re-download using the
     force_reload parameter. Reference are saved to the user's home directory 
-    in a folder "~/.pokebase".
+    in a folder `~/.pokebase`.
+
+    :param sub_dir: what type of data is requested. (ex. 'move' or 'type')
+    :param name: the name of the resource to lookup (ex. 'pound' or 'fire')
+    :param force_reload: force the download, even if it the file exists already
+    :return the data requested, as a Python `dict` instance
     """
 
     cwd = os.getcwd()
@@ -52,15 +105,15 @@ def lookup_data(sub_dir, name, force_reload=False):
     if os.path.exists('.'.join([name, 'json'])) and not force_reload:
         # If the resources wanted already exists, load it from disk.
 
-        with open('.'.join([name, 'json']), 'r') as file:
-            data = json.load(file)
+        with open('.'.join([name, 'json']), 'r') as f:
+            data = json.load(f)
     else:
         # If it doesn't exist, go download and save the resources.
         r = requests.get('/'.join([BASE_URL, sub_dir, name]))
         r.raise_for_status()
         data = json.loads(r.text)
-        with open('.'.join([name, 'json']), 'w') as file:
-            json.dump(data, file, indent=2)
+        with open('.'.join([name, 'json']), 'w') as f:
+            json.dump(data, f, indent=2)
 
     os.chdir(cwd)  # Return to original working directory.
     return data
@@ -72,7 +125,11 @@ def lookup_resource(name, force_reload=False):
     If the resource desired is already cached, this function will return the
     cached copy. However, data files can be forced to re-download using the
     force_reload parameter. Reference are saved to the user's home directory 
-    in a folder "~/.pokebase".
+    in a folder `~/.pokebase`.
+
+    :param name: which resource to download (ex. 'ability' or 'berry')
+    :param force_reload: force the download, even if it the file exists already
+    :return Python dict with the data this resource contains
     """
 
     if name not in RESOURCES:
@@ -85,8 +142,8 @@ def lookup_resource(name, force_reload=False):
     if os.path.exists(name) and not force_reload:
         os.chdir(name)
 
-        with open('resource.json', 'r') as file:
-            resource = json.load(file)
+        with open('resource.json', 'r') as f:
+            resource = json.load(f)
 
     else:
         os.mkdir(name)
@@ -106,8 +163,8 @@ def lookup_resource(name, force_reload=False):
             r.raise_for_status()
             resource = json.loads(r.text)
 
-        with open('resource.json', 'w') as file:
-            json.dump(resource, file, indent=2)
+        with open('resource.json', 'w') as f:
+            json.dump(resource, f, indent=2)
 
     os.chdir(cwd)
     return resource
@@ -120,6 +177,10 @@ def make_obj(d):
     in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data 
     may be of a standard type, such as an integer or string. For those cases, 
     the input value is simply returned, unchanged.
+
+    :param d: the dictionary to be converted
+    :return either the same value, if it does not need to be converted, or a
+    NamedAPIResource or APIMetadata instance, depending on the data inputted.
     """
 
     if isinstance(d, dict):
@@ -136,9 +197,30 @@ def make_obj(d):
 
 class NamedAPIResource(object):
     """Core API class, used for accessing the bulk of the data.
+
+    The class uses a modified __getattr__ function to serve the appropriate
+    data, so lookup data via the `.` operator, and use the `PokeAPI docs
+    <https://pokeapi.co/docsv2/>`_ or the builtin `dir` function to see the
+    possible lookups.
+
+    This class takes the complexity out of lots of similar classes for each
+    different kind of data served by the API, all of which are very similar,
+    but not identical
     """
 
     def __init__(self, resource, name, lookup=True):
+        """Returns a new NamedAPIResource object.
+
+        Specify lookup=False to conserve calls to the API and speed up your
+        program. This feature is used internally, but you will usually want it
+        left True. Leaving it False causes the object to act as a placeholder
+        for the data, until the data is called by the user.
+
+        :param str resource: What kind of data you want (ex. 'move' or 'type')
+        :param str name: What the resource is called (ex. 'pound' or 'fire')
+        :param bool lookup: Whether or not to gather all the data on
+        construction
+        """
         
         r = resource.replace(' ', '-').lower()
         n = APIResourceList(r).id_to_name(name)
@@ -155,6 +237,12 @@ class NamedAPIResource(object):
             self.__is_loaded = False
             
     def __getattr__(self, attr):
+        """Modified method to auto-load the data when it is needed.
+
+        If the data has not yet been looked up, it is loaded, and then checked
+        for the requested attribute. If it is not found, AttributeError is
+        raised.
+        """
         
         if not self.__is_loaded:
             self.load()
@@ -168,8 +256,19 @@ class NamedAPIResource(object):
 
     def __str__(self):
         return str(self.name)
+
+    def __repr__(self):
+        return '<{} - {}>'.format(self.resource_type, self.name)
         
     def load(self):
+        """Function to collect reference data and connect it to the instance as
+         attributes.
+
+         Internal function, does not usually need to be called by the user, as
+         it is called automatically when an attribute is requested.
+
+        :return None
+        """
         
         self.__data.update(lookup_data(self.__data['type'], 
                                        self.__data['name']))
@@ -186,6 +285,8 @@ class NamedAPIResource(object):
         
         self.__is_loaded = True
 
+        return None
+
         
 class APIResourceList(object):
     """Class for a data container.
@@ -194,9 +295,17 @@ class APIResourceList(object):
     reference. Ex. APIResourceList('berry') gives information about all 
     berries, such as which ID's correspond to which berry names, and 
     how many berries there are.
+
+    You can iterate through all the names or all the urls, using the respective
+    properties. You can also iterate on the object itself to run through the
+    `dict`s with names and urls together, whatever floats your boat.
     """
 
     def __init__(self, name):
+        """Creates a new APIResourceList instance.
+
+        :param name: the name of the resource to get (ex. 'berry' or 'move')
+        """
 
         response = lookup_resource(name)
 
@@ -208,38 +317,54 @@ class APIResourceList(object):
         return self.count
         
     def __iter__(self):
-        return self.__results
+        return iter(self.__results)
     
     def __str__(self):
         return str(self.__results)
     
     def id_to_name(self, id_):
+        """Attempts to convert a given id_ into its corresponding name.
+
+        If no name exists, the function will return `str(id_)`
+        :param id_:
+        :return:
+        """
 
         if self.name == 'location-area':
-            return str(id_)  # location-areas can't be looked up by name.
+            # location-areas can't be looked up by name.
+            return str(id_)
 
         for res in self.__results:
             if res.get('name', res['url'].split('/')[-2]) == id_:
+                # Runs when the end of the url is equal to `id_`.
                 return str(id_)
+
             if res['url'].split('/')[-2] == str(id_):
+                # Runs when `id_` is found in a url that has a matching name.
                 return res.get('name', res['url'].split('/')[-2])
+
         else:
             raise ValueError('resource not found ({}), check spelling'
                              .format(id_))
 
     @property
     def names(self):
+        """Useful iterator for all the resource's names."""
         for result in self.__results:
             yield result.get('name', result['url'].split('/')[-2])
 
     @property
     def urls(self):
+        """Useful iterator for all of the resource's urls."""
         for result in self.__results:
             yield result['url']
 
             
 class APIMetadata(object):
     """Helper class for smaller references.
+
+    This class emulates a dictionary, but attribute lookup is via the `.`
+    operator, not indexing. (ex. instance.attr, not instance['attr']).
 
     Used for "Common Models" classes and NamedAPIResource helper classes.
     https://pokeapi.co/docsv2/#common-models
@@ -257,3 +382,6 @@ class APIMetadata(object):
                 
     def __str__(self):
         return str(self.__data)
+
+    def __repr__(self):
+        return self.__str__()
