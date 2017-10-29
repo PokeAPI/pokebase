@@ -2,9 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+import os
 import unittest
 
+import requests
+
 import pokebase as pb
+from pokebase.api import SPRITE_CACHE
 
 
 class TestNamedAPIResource(unittest.TestCase):
@@ -56,6 +60,21 @@ class TestAPIMetadata(unittest.TestCase):
 
     def testSimpleAttr(self):
         self.assertEqual(self.name.name, 'Très tendre')
+
+
+class TestSpriteResource(unittest.TestCase):
+
+    def setUp(self):
+        self.bulba = pb.pokemon_sprite(1)
+        self.doesnt_exists = pb.pokemon_sprite(-1)
+
+    def testPath(self):
+        self.assertEqual(self.bulba.path, os.path.join(SPRITE_CACHE,
+                                                       'pokemon', '1.png'))
+
+    def test404(self):
+        self.assertRaises(requests.exceptions.HTTPError,
+                          lambda: self.doesnt_exists.path)
 
 
 if __name__ == '__main__':

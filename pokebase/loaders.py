@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from .api import NamedAPIResource
+from .api import NamedAPIResource, SpriteResource
 
 
 def berry(id_or_name):
@@ -578,3 +578,17 @@ def language(id_or_name):
     :return: NamedAPIResource with the appropriate data
     """
     return NamedAPIResource('language', id_or_name)
+
+
+def pokemon_sprite(id_):
+    """Quick Pokemon sprite lookup.
+
+    NOTE: This will return an object with the absolute file path to the sprite,
+    NOT the sprite. This is designed as such so that you can load the image in
+    whatever image class your specific application requires.
+
+    :param id_: id of the sprite to lookup
+    :return: SpriteResource object
+    """
+
+    return SpriteResource('pokemon', id_)

@@ -49,6 +49,7 @@ __all__ = ['NamedAPIResource',
            'pokemon_habitat',
            'pokemon_shape',
            'pokemon_species',
+           'pokemon_sprite'
            'region',
            'stat',
            'super_contest_effect',

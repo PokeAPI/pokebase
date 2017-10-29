@@ -32,9 +32,13 @@ import requests
 
 
 BASE_URL = 'http://pokeapi.co/api/v2'
+SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites'
 CACHE = os.path.join(os.path.expanduser('~'), '.pokebase')
+SPRITE_CACHE = os.path.join(CACHE, 'sprite')
 if not os.path.exists(CACHE):
     os.makedirs(CACHE)
+if not os.path.exists(SPRITE_CACHE):
+    os.makedirs(SPRITE_CACHE)
 RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'characteristic', 'contest-effect', 'contest-type', 'egg-group',
              'encounter-condition', 'encounter-condition-value',
@@ -170,6 +174,45 @@ def lookup_resource(name, force_reload=False):
     return resource
 
 
+def lookup_sprite(resource, filename, force_reload=False):
+    """Helper function to locate and also download sprites onto the computer.
+
+    Images will be caches in the directory ~/.pokebase/sprite and then named by
+    id number.
+
+    :param resource: which type of sprite, currently, 'pokemon' is the only
+        valid option.
+    :param filename: id + .png extension of the sprite online.
+    :param force_reload: whether or not to force-download the image even if it
+        has already been downloaded.
+    :return: absolute file path to the sprite on the computer.
+    """
+
+    cwd = os.getcwd()
+    os.chdir(SPRITE_CACHE)
+
+    if not os.path.exists(resource):   # Make the cache if it doesn't exist.
+        os.mkdir(resource)
+    os.chdir(resource)
+
+    if not os.path.exists(filename) or force_reload:
+        # Download the sprite, if needed.
+        url = '/'.join([SPRITE_URL, resource, filename])
+
+        r = requests.get(url)
+        r.raise_for_status()
+
+        with open(filename, 'wb') as f:
+            for chunk in r.iter_content(1000000):
+                f.write(chunk)
+
+    # Determine the file path.
+    file_path = os.path.abspath(filename)
+
+    os.chdir(cwd)  # Working directory not affected.
+    return file_path
+
+
 def make_obj(d):
     """Takes a dictionary and returns a NamedAPIResource or APIMetadata.
 
@@ -221,15 +264,15 @@ class NamedAPIResource(object):
         :param bool lookup: Whether or not to gather all the data on
         construction
         """
-        
+
         r = resource.replace(' ', '-').lower()
         n = APIResourceList(r).id_to_name(name)
-        
+
         self.__data = {'type': r, 'name': n,
                        'url': '/'.join([BASE_URL, r, n])}
 
         self.resource_type = r
-        
+
         if lookup:
             self.load()
             self.__is_loaded = True
@@ -385,3 +428,61 @@ class APIMetadata(object):
 
     def __repr__(self):
         return self.__str__()
+
+
+class SpriteResource(object):
+    """Class for downloading sprites to your computer and then locating them.
+
+    The only notable attribute of this class is a str with the absolute path to
+    the sprite. This is designed as such so that you can load the image in
+    whatever image class your specific application requires. The path can be
+    found in the `path` attribute. No surprises.
+
+    """
+
+    def __init__(self, resource, id_, lookup=False):
+        """Constructs a SpriteResource object.
+
+        :param resource: which type of sprite, currently, 'pokemon' is the only
+            valid option.
+        :param id_: id of the pokemon to download.
+        :param lookup: whether or not to retrieve the image immediately.
+        """
+
+        r = resource.replace(' ', '-').lower()
+        filename = '.'.join([str(id_), 'png'])
+
+        self.__data = {'type': r, 'path': filename,
+                       'url': '/'.join([SPRITE_URL, r, filename])}
+
+        if lookup:
+            self.load()
+            self.__is_loaded = True
+        else:
+            self.__is_loaded = False
+
+    def __getattr__(self, attr):
+        """Modified method to auto-load the data when it is needed.
+
+        If the sprite has not yet been downloaded, it is downloaded.
+        If the requested attribute is not found, AttributeError is
+        raised.
+        """
+
+        if not self.__is_loaded:
+            self.load()
+            self.__is_loaded = True
+
+            return self.__getattribute__(attr)
+
+        else:
+            raise AttributeError('{} object has no attribute {}'
+                                 .format(type(self), attr))
+
+    def load(self):
+        """Downloads the sprite from the internet."""
+        path = lookup_sprite(self.__data['type'], self.__data['path'])
+
+        self.__setattr__('path', path)
+
+        return None
