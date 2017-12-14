@@ -34,10 +34,6 @@ BASE_URL = 'http://pokeapi.co/api/v2'
 SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites'
 CACHE = os.path.join(os.path.expanduser('~'), '.pokebase')
 SPRITE_CACHE = os.path.join(CACHE, 'sprite')
-if not os.path.exists(CACHE):
-    os.makedirs(CACHE)
-if not os.path.exists(SPRITE_CACHE):
-    os.makedirs(SPRITE_CACHE)
 RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'characteristic', 'contest-effect', 'contest-type', 'egg-group',
              'encounter-condition', 'encounter-condition-value',
@@ -51,6 +47,29 @@ RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'pokemon-form', 'pokemon-habitat', 'pokemon-shape',
              'pokemon-species', 'region', 'stat', 'super-contest-effect',
              'type', 'version', 'version-group']
+
+
+def safemakedirs(path, mode=0o777):
+    """Create a leaf directory and all intermediate ones in a safe way.
+
+    A wrapper to os.makedirs() that handles existing leaf directories while
+    avoiding os.path.exists() race conditions.
+
+    :param path: relative or absolute directory tree to create
+    :param mode: directory permissions in octal
+    :return: The newly-created path
+    """
+    try:
+        os.makedirs(path, mode)
+    except OSError as e:
+        if e.errno != 17:  # File exists
+            raise
+
+    return path
+
+
+safemakedirs(CACHE)
+safemakedirs(SPRITE_CACHE)
 
 
 def set_cache(new_path):
@@ -69,12 +88,7 @@ def set_cache(new_path):
     """
     global CACHE
 
-    CACHE = os.path.abspath(new_path)
-
-    if not os.path.exists(CACHE):
-        os.makedirs(CACHE)
-
-    return None
+    CACHE = safemakedirs(os.path.abspath(new_path))
 
 
 def lookup_data(sub_dir, name, force_reload=False):
