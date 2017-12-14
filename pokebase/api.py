@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """pokebase/api.py - Main file for program interface with the API.
