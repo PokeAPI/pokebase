@@ -77,13 +77,13 @@ def set_cache(new_path):
 
     return None
 
-    
+
 def lookup_data(sub_dir, name, force_reload=False):
     """Locates and saves a specific reference, and then returns the data.
 
     If the resource desired is already cached, this function will return the
     cached copy. However, data files can be forced to re-download using the
-    force_reload parameter. Reference are saved to the user's home directory 
+    force_reload parameter. Reference are saved to the user's home directory
     in a folder `~/.pokebase`.
 
     :param sub_dir: what type of data is requested. (ex. 'move' or 'type')
@@ -98,7 +98,7 @@ def lookup_data(sub_dir, name, force_reload=False):
     # Create the data directory if it does not exist.
     if not os.path.exists(sub_dir):
         lookup_resource(sub_dir)
-    
+
     # Go to that directory.
     os.chdir(sub_dir)
 
@@ -125,10 +125,10 @@ def lookup_data(sub_dir, name, force_reload=False):
 
 def lookup_resource(name, force_reload=False):
     """Returns a resource with all of the data references in the category.
-    
+
     If the resource desired is already cached, this function will return the
     cached copy. However, data files can be forced to re-download using the
-    force_reload parameter. Reference are saved to the user's home directory 
+    force_reload parameter. Reference are saved to the user's home directory
     in a folder `~/.pokebase`.
 
     :param name: which resource to download (ex. 'ability' or 'berry')
@@ -216,9 +216,9 @@ def lookup_sprite(resource, filename, force_reload=False):
 def make_obj(d):
     """Takes a dictionary and returns a NamedAPIResource or APIMetadata.
 
-    The names and values of the data will match exactly with those found 
-    in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data 
-    may be of a standard type, such as an integer or string. For those cases, 
+    The names and values of the data will match exactly with those found
+    in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data
+    may be of a standard type, such as an integer or string. For those cases,
     the input value is simply returned, unchanged.
 
     :param d: the dictionary to be converted
@@ -236,7 +236,7 @@ def make_obj(d):
             return APIMetadata(d)
     else:
         return d
-    
+
 
 class NamedAPIResource(object):
     """Core API class, used for accessing the bulk of the data.
@@ -278,7 +278,7 @@ class NamedAPIResource(object):
             self.__is_loaded = True
         else:
             self.__is_loaded = False
-            
+
     def __getattr__(self, attr):
         """Modified method to auto-load the data when it is needed.
 
@@ -286,13 +286,13 @@ class NamedAPIResource(object):
         for the requested attribute. If it is not found, AttributeError is
         raised.
         """
-        
+
         if not self.__is_loaded:
             self.load()
             self.__is_loaded = True
-            
+
             return self.__getattribute__(attr)
-        
+
         else:
             raise AttributeError('{} object has no attribute {}'
                                  .format(type(self), attr))
@@ -302,7 +302,7 @@ class NamedAPIResource(object):
 
     def __repr__(self):
         return '<{} - {}>'.format(self.resource_type, self.name)
-        
+
     def load(self):
         """Function to collect reference data and connect it to the instance as
          attributes.
@@ -312,31 +312,31 @@ class NamedAPIResource(object):
 
         :return None
         """
-        
-        self.__data.update(lookup_data(self.__data['type'], 
+
+        self.__data.update(lookup_data(self.__data['type'],
                                        self.__data['name']))
 
         for k, v in self.__data.items():
-            
+
             if isinstance(v, dict):
                 self.__setattr__(k, make_obj(v))
-                
+
             elif isinstance(v, list):
                 self.__setattr__(k, [make_obj(i) for i in v])
             else:
                 self.__setattr__(k, v)
-        
+
         self.__is_loaded = True
 
         return None
 
-        
+
 class APIResourceList(object):
     """Class for a data container.
 
     Used to access data corresponding to a category, rather than an individual
-    reference. Ex. APIResourceList('berry') gives information about all 
-    berries, such as which ID's correspond to which berry names, and 
+    reference. Ex. APIResourceList('berry') gives information about all
+    berries, such as which ID's correspond to which berry names, and
     how many berries there are.
 
     You can iterate through all the names or all the urls, using the respective
@@ -358,13 +358,13 @@ class APIResourceList(object):
 
     def __len__(self):
         return self.count
-        
+
     def __iter__(self):
         return iter(self.__results)
-    
+
     def __str__(self):
         return str(self.__results)
-    
+
     def id_to_name(self, id_):
         """Attempts to convert a given id_ into its corresponding name.
 
@@ -402,7 +402,7 @@ class APIResourceList(object):
         for result in self.__results:
             yield result['url']
 
-            
+
 class APIMetadata(object):
     """Helper class for smaller references.
 
@@ -415,14 +415,14 @@ class APIMetadata(object):
 
     def __init__(self, data):
         self.__data = data
-        
+
         for k, v in self.__data.items():
-            
+
             if isinstance(v, dict):
                 self.__setattr__(k, make_obj(v))
             else:
                 self.__setattr__(k, v)
-                
+
     def __str__(self):
         return str(self.__data)
 
