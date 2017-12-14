@@ -86,9 +86,10 @@ def set_cache(new_path):
     directory
     :return: None
     """
-    global CACHE
+    global CACHE, SPRITE_CACHE
 
     CACHE = safemakedirs(os.path.abspath(new_path))
+    SPRITE_CACHE = safemakedirs(os.path.join(CACHE, 'sprite'))
 
 
 def lookup_data(sub_dir, name, force_reload=False):
