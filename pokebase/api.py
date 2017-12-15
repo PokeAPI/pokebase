@@ -68,6 +68,29 @@ def safemakedirs(path, mode=0o777):
     return path
 
 
+def get_default_cache():
+    """Get the default cache location.
+
+    Adheres to the XDG Base Directory specification, as described in
+    https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
+    For backward-compatibility purposes, if the old location ~/.pokebase
+    exists use it instead of the XDG standard
+
+    :return: the default cache directory absolute path
+    """
+
+    old_cache = os.path.join(os.path.expanduser('~'), '.pokebase')
+
+    if os.path.exists(old_cache):
+        return old_cache
+
+    xdg_cache_home = os.environ.get('XDG_CACHE_HOME') or \
+                     os.path.join(os.path.expanduser('~'), '.cache')
+
+    return os.path.join(xdg_cache_home, 'pokebase')
+
+
 def set_cache(new_path=None):
     """Simple function to change the cache location.
 
@@ -86,7 +109,7 @@ def set_cache(new_path=None):
     global CACHE, SPRITE_CACHE
 
     if new_path is None:
-        new_path = os.path.join(os.path.expanduser('~'), '.pokebase')
+        new_path = get_default_cache()
 
     CACHE = safemakedirs(os.path.abspath(new_path))
     SPRITE_CACHE = safemakedirs(os.path.join(CACHE, 'sprite'))
