@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """pokebase/api.py - Main file for program interface with the API.
@@ -33,12 +32,8 @@ import requests
 
 BASE_URL = 'http://pokeapi.co/api/v2'
 SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites'
-CACHE = os.path.join(os.path.expanduser('~'), '.pokebase')
-SPRITE_CACHE = os.path.join(CACHE, 'sprite')
-if not os.path.exists(CACHE):
-    os.makedirs(CACHE)
-if not os.path.exists(SPRITE_CACHE):
-    os.makedirs(SPRITE_CACHE)
+CACHE = None  # To be set after set_cache() definition
+SPRITE_CACHE = None  # Ditto
 RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'characteristic', 'contest-effect', 'contest-type', 'egg-group',
              'encounter-condition', 'encounter-condition-value',
@@ -54,11 +49,54 @@ RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'type', 'version', 'version-group']
 
 
-def set_cache(new_path):
+def safemakedirs(path, mode=0o777):
+    """Create a leaf directory and all intermediate ones in a safe way.
+
+    A wrapper to os.makedirs() that handles existing leaf directories while
+    avoiding os.path.exists() race conditions.
+
+    :param path: relative or absolute directory tree to create
+    :param mode: directory permissions in octal
+    :return: The newly-created path
+    """
+    try:
+        os.makedirs(path, mode)
+    except OSError as e:
+        if e.errno != 17:  # File exists
+            raise
+
+    return path
+
+
+def get_default_cache():
+    """Get the default cache location.
+
+    Adheres to the XDG Base Directory specification, as described in
+    https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
+    For backward-compatibility purposes, if the old location ~/.pokebase
+    exists use it instead of the XDG standard
+
+    :return: the default cache directory absolute path
+    """
+
+    old_cache = os.path.join(os.path.expanduser('~'), '.pokebase')
+
+    if os.path.exists(old_cache):
+        return old_cache
+
+    xdg_cache_home = os.environ.get('XDG_CACHE_HOME') or \
+                     os.path.join(os.path.expanduser('~'), '.cache')
+
+    return os.path.join(xdg_cache_home, 'pokebase')
+
+
+def set_cache(new_path=None):
     """Simple function to change the cache location.
 
     `new_path` can be an absolute or relative path. If the directory does not
-    exist yet, this function will create it.
+    exist yet, this function will create it. If None it will set the cache to
+    the default cache directory.
 
     If you are going to change the cache directory, this function should be
     called at the top of your script, before you make any calls to the API.
@@ -68,22 +106,26 @@ def set_cache(new_path):
     directory
     :return: None
     """
-    global CACHE
+    global CACHE, SPRITE_CACHE
 
-    CACHE = os.path.abspath(new_path)
+    if new_path is None:
+        new_path = get_default_cache()
 
-    if not os.path.exists(CACHE):
-        os.makedirs(CACHE)
+    CACHE = safemakedirs(os.path.abspath(new_path))
+    SPRITE_CACHE = safemakedirs(os.path.join(CACHE, 'sprite'))
 
-    return None
+    return CACHE, SPRITE_CACHE
 
-    
+
+set_cache()
+
+
 def lookup_data(sub_dir, name, force_reload=False):
     """Locates and saves a specific reference, and then returns the data.
 
     If the resource desired is already cached, this function will return the
     cached copy. However, data files can be forced to re-download using the
-    force_reload parameter. Reference are saved to the user's home directory 
+    force_reload parameter. Reference are saved to the user's home directory
     in a folder `~/.pokebase`.
 
     :param sub_dir: what type of data is requested. (ex. 'move' or 'type')
@@ -98,7 +140,7 @@ def lookup_data(sub_dir, name, force_reload=False):
     # Create the data directory if it does not exist.
     if not os.path.exists(sub_dir):
         lookup_resource(sub_dir)
-    
+
     # Go to that directory.
     os.chdir(sub_dir)
 
@@ -125,10 +167,10 @@ def lookup_data(sub_dir, name, force_reload=False):
 
 def lookup_resource(name, force_reload=False):
     """Returns a resource with all of the data references in the category.
-    
+
     If the resource desired is already cached, this function will return the
     cached copy. However, data files can be forced to re-download using the
-    force_reload parameter. Reference are saved to the user's home directory 
+    force_reload parameter. Reference are saved to the user's home directory
     in a folder `~/.pokebase`.
 
     :param name: which resource to download (ex. 'ability' or 'berry')
@@ -216,9 +258,9 @@ def lookup_sprite(resource, filename, force_reload=False):
 def make_obj(d):
     """Takes a dictionary and returns a NamedAPIResource or APIMetadata.
 
-    The names and values of the data will match exactly with those found 
-    in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data 
-    may be of a standard type, such as an integer or string. For those cases, 
+    The names and values of the data will match exactly with those found
+    in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data
+    may be of a standard type, such as an integer or string. For those cases,
     the input value is simply returned, unchanged.
 
     :param d: the dictionary to be converted
@@ -236,7 +278,7 @@ def make_obj(d):
             return APIMetadata(d)
     else:
         return d
-    
+
 
 class NamedAPIResource(object):
     """Core API class, used for accessing the bulk of the data.
@@ -278,7 +320,7 @@ class NamedAPIResource(object):
             self.__is_loaded = True
         else:
             self.__is_loaded = False
-            
+
     def __getattr__(self, attr):
         """Modified method to auto-load the data when it is needed.
 
@@ -286,13 +328,13 @@ class NamedAPIResource(object):
         for the requested attribute. If it is not found, AttributeError is
         raised.
         """
-        
+
         if not self.__is_loaded:
             self.load()
             self.__is_loaded = True
-            
+
             return self.__getattribute__(attr)
-        
+
         else:
             raise AttributeError('{} object has no attribute {}'
                                  .format(type(self), attr))
@@ -302,7 +344,7 @@ class NamedAPIResource(object):
 
     def __repr__(self):
         return '<{} - {}>'.format(self.resource_type, self.name)
-        
+
     def load(self):
         """Function to collect reference data and connect it to the instance as
          attributes.
@@ -312,31 +354,31 @@ class NamedAPIResource(object):
 
         :return None
         """
-        
-        self.__data.update(lookup_data(self.__data['type'], 
+
+        self.__data.update(lookup_data(self.__data['type'],
                                        self.__data['name']))
 
         for k, v in self.__data.items():
-            
+
             if isinstance(v, dict):
                 self.__setattr__(k, make_obj(v))
-                
+
             elif isinstance(v, list):
                 self.__setattr__(k, [make_obj(i) for i in v])
             else:
                 self.__setattr__(k, v)
-        
+
         self.__is_loaded = True
 
         return None
 
-        
+
 class APIResourceList(object):
     """Class for a data container.
 
     Used to access data corresponding to a category, rather than an individual
-    reference. Ex. APIResourceList('berry') gives information about all 
-    berries, such as which ID's correspond to which berry names, and 
+    reference. Ex. APIResourceList('berry') gives information about all
+    berries, such as which ID's correspond to which berry names, and
     how many berries there are.
 
     You can iterate through all the names or all the urls, using the respective
@@ -358,13 +400,13 @@ class APIResourceList(object):
 
     def __len__(self):
         return self.count
-        
+
     def __iter__(self):
         return iter(self.__results)
-    
+
     def __str__(self):
         return str(self.__results)
-    
+
     def id_to_name(self, id_):
         """Attempts to convert a given id_ into its corresponding name.
 
@@ -402,7 +444,7 @@ class APIResourceList(object):
         for result in self.__results:
             yield result['url']
 
-            
+
 class APIMetadata(object):
     """Helper class for smaller references.
 
@@ -415,14 +457,14 @@ class APIMetadata(object):
 
     def __init__(self, data):
         self.__data = data
-        
+
         for k, v in self.__data.items():
-            
+
             if isinstance(v, dict):
                 self.__setattr__(k, make_obj(v))
             else:
                 self.__setattr__(k, v)
-                
+
     def __str__(self):
         return str(self.__data)
 
