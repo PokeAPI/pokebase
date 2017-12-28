@@ -9,7 +9,7 @@ def readme_text():
 setup(
     name='pokebase',
     packages=['pokebase'],
-    version='1.1.0',
+    version='1.2.0',
     description='A Python wrapper for the friendly PokeAPI database',
     long_description=readme_text(),
     author='Greg Hilmes',

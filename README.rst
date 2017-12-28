@@ -57,5 +57,5 @@ the built-in ``type`` function.
 .. |travis| image:: https://travis-ci.org/GregHilmes/pokebase.svg?branch=master
    :target: https://travis-ci.org/GregHilmes/pokebase
 
-.. |pypi| image:: https://img.shields.io/badge/pypi-1.1.0-blue.svg
+.. |pypi| image:: https://img.shields.io/badge/pypi-1.2.0-blue.svg
    :target: https://pypi.python.org/pypi/pokebase
