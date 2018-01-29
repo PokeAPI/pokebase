@@ -49,7 +49,7 @@ RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'type', 'version', 'version-group']
 
 
-def safemakedirs(path, mode=0o777):
+def safe_make_dirs(path, mode=0o777):
     """Create a leaf directory and all intermediate ones in a safe way.
 
     A wrapper to os.makedirs() that handles existing leaf directories while
@@ -104,15 +104,15 @@ def set_cache(new_path=None):
 
     :param new_path: relative or absolute path to the desired new cache
     directory
-    :return: None
+    :return: str, str
     """
     global CACHE, SPRITE_CACHE
 
     if new_path is None:
         new_path = get_default_cache()
 
-    CACHE = safemakedirs(os.path.abspath(new_path))
-    SPRITE_CACHE = safemakedirs(os.path.join(CACHE, 'sprite'))
+    CACHE = safe_make_dirs(os.path.abspath(new_path))
+    SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE, 'sprite'))
 
     return CACHE, SPRITE_CACHE
 
@@ -192,7 +192,7 @@ def lookup_resource(name, force_reload=False):
             resource = json.load(f)
 
     else:
-        os.mkdir(name)
+        safe_make_dirs(name)
         os.chdir(name)
 
         url = '/'.join([BASE_URL, name])
@@ -234,7 +234,7 @@ def lookup_sprite(resource, filename, force_reload=False):
     os.chdir(SPRITE_CACHE)
 
     if not os.path.exists(resource):   # Make the cache if it doesn't exist.
-        os.mkdir(resource)
+        safe_make_dirs(resource)
     os.chdir(resource)
 
     if not os.path.exists(filename) or force_reload:
