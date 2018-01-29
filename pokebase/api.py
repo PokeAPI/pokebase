@@ -19,9 +19,10 @@ Data about each API resource will come in the form of basic Python types, like
 dictionary allowing attribute lookup via the dot operator, rather than normal
 `dict` lookup with square brackets and a string.
 
-By default, this wrapper will cache all API data in `~/.pokebase`. To change
-this behavior, call `set_cache('/abs/or/rel/filepath')` before you make any API
-calls.
+By default, this wrapper will cache all API data in `~/.cache/pokebase`
+(instead of the old `~/.pokebase`, although if this directory exists, it will
+be used) To change this behavior, call `set_cache('/abs/or/rel/filepath')` at
+the top of your script before you make any API calls.
 """
 
 import json
@@ -126,7 +127,7 @@ def lookup_data(sub_dir, name, force_reload=False):
     If the resource desired is already cached, this function will return the
     cached copy. However, data files can be forced to re-download using the
     force_reload parameter. Reference are saved to the user's home directory
-    in a folder `~/.pokebase`.
+    in a folder `~/.cache/pokebase`.
 
     :param sub_dir: what type of data is requested. (ex. 'move' or 'type')
     :param name: the name of the resource to lookup (ex. 'pound' or 'fire')
@@ -171,7 +172,7 @@ def lookup_resource(name, force_reload=False):
     If the resource desired is already cached, this function will return the
     cached copy. However, data files can be forced to re-download using the
     force_reload parameter. Reference are saved to the user's home directory
-    in a folder `~/.pokebase`.
+    in a folder `~/.cache/pokebase`.
 
     :param name: which resource to download (ex. 'ability' or 'berry')
     :param force_reload: force the download, even if it the file exists already
@@ -219,8 +220,8 @@ def lookup_resource(name, force_reload=False):
 def lookup_sprite(resource, filename, force_reload=False):
     """Helper function to locate and also download sprites onto the computer.
 
-    Images will be caches in the directory ~/.pokebase/sprite and then named by
-    id number.
+    Images will be caches in the directory ~/.cahce/pokebase/sprite and then
+    named by id number.
 
     :param resource: which type of sprite, currently, 'pokemon' is the only
         valid option.
@@ -290,7 +291,7 @@ class NamedAPIResource(object):
 
     This class takes the complexity out of lots of similar classes for each
     different kind of data served by the API, all of which are very similar,
-    but not identical
+    but not identical.
     """
 
     def __init__(self, resource, name, lookup=True):
