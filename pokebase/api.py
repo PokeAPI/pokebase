@@ -318,7 +318,6 @@ class NamedAPIResource(object):
 
         if lookup:
             self.load()
-            self.__is_loaded = True
         else:
             self.__is_loaded = False
 
@@ -332,7 +331,6 @@ class NamedAPIResource(object):
 
         if not self.__is_loaded:
             self.load()
-            self.__is_loaded = True
 
             return self.__getattribute__(attr)
 
