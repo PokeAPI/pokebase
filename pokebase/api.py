@@ -311,11 +311,9 @@ class NamedAPIResource(object):
         r = resource.replace(' ', '-').lower()
         n = APIResourceList(r).id_to_name(name)
 
-        self.__data = {'type': r, 'name': n,
-                       'url': '/'.join([BASE_URL, r, n])}
-
         self.resource_type = r
 
+        self.init_data(r, n, '/'.join([BASE_URL, r, n]))
         self.init_lookup(lookup)
 
     def __getattr__(self, attr):
@@ -341,6 +339,15 @@ class NamedAPIResource(object):
     def __repr__(self):
         return '<{} - {}>'.format(self.resource_type, self.name)
 
+    def init_data(self, resource_dir, resource_name, url):
+        """Function to initialize internals for debugging and lazy loading
+
+         Internal function, does not usually need to be called by the user, as
+         it is called automatically during initialization.
+
+        :return None
+        """
+        self.__data = {'type': resource_dir, 'name': resource_name, 'url': url}
 
     def init_lookup(self, lookup=False):
         """Function to decide whether to load reference data or indicate that
