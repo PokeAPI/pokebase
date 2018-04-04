@@ -316,10 +316,7 @@ class NamedAPIResource(object):
 
         self.resource_type = r
 
-        if lookup:
-            self.load()
-        else:
-            self.__is_loaded = False
+        self.init_lookup(lookup)
 
     def __getattr__(self, attr):
         """Modified method to auto-load the data when it is needed.
@@ -343,6 +340,21 @@ class NamedAPIResource(object):
 
     def __repr__(self):
         return '<{} - {}>'.format(self.resource_type, self.name)
+
+
+    def init_lookup(self, lookup=False):
+        """Function to decide whether to load reference data or indicate that
+         it has not yet been loaded.
+
+         Internal function, does not usually need to be called by the user, as
+         it is called automatically during initialization.
+
+        :return None
+        """
+        if lookup:
+            self.load()
+        else:
+            self.__is_loaded = False
 
     def load(self):
         """Function to collect reference data and connect it to the instance as
