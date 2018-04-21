@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .api import NamedAPIResource, SpriteResource
+from .api import NamedAPIResource, NamedAPISubresource, SpriteResource
 
 
 def berry(id_or_name):
@@ -591,3 +591,15 @@ def pokemon_sprite(id_):
     """
 
     return SpriteResource('pokemon', id_)
+
+def location_area_encounters(id_):
+    """Quick Pokemon encounters lookup.
+
+    See https://pokeapi.co/docsv2/#pokemon - particularly the URL returned
+    by location_area_encounters.
+
+    :param id_: id of the pokemon's location_area_encounters to look up
+    :return: NamedAPISubresource with the appropriate data
+    """
+
+    return NamedAPISubresource('pokemon', id_, 'encounters')
