@@ -36,6 +36,15 @@ class TestNamedAPIResource(unittest.TestCase):
     def testNoneAttr(self):
         self.assertIsNone(self.evolution_chain.baby_trigger_item)
 
+class TestNamedAPISubresource(unittest.TestCase):
+
+    def setUp(self):
+        self.dragonite_encounters = pb.location_area_encounters(149)
+        self.mew_encounters = pb.location_area_encounters(151)
+
+    def testCount(self):
+        self.assertGreater(len(self.dragonite_encounters.results), 0)
+        self.assertEqual(len(self.mew_encounters.results), 0)
 
 class TestAPIResourceList(unittest.TestCase):
 
