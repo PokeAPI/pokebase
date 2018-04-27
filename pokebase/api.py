@@ -31,7 +31,9 @@ import os
 import requests
 
 
-BASE_URL = 'http://pokeapi.co/api/v2'
+BASE_HOST = 'http://pokeapi.co'
+BASE_PATH = '/api/v2'
+BASE_URL = BASE_HOST + BASE_PATH
 SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites'
 CACHE = None  # To be set after set_cache() definition
 SPRITE_CACHE = None  # Ditto
@@ -48,6 +50,7 @@ RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'pokemon-form', 'pokemon-habitat', 'pokemon-shape',
              'pokemon-species', 'region', 'stat', 'super-contest-effect',
              'type', 'version', 'version-group']
+SUBRESOURCES = ['pokemon/encounters']
 
 
 def safe_make_dirs(path, mode=0o777):
@@ -121,7 +124,7 @@ def set_cache(new_path=None):
 set_cache()
 
 
-def lookup_data(sub_dir, name, force_reload=False):
+def lookup_data(sub_dir, name, url=None, force_reload=False):
     """Locates and saves a specific reference, and then returns the data.
 
     If the resource desired is already cached, this function will return the
@@ -131,9 +134,13 @@ def lookup_data(sub_dir, name, force_reload=False):
 
     :param sub_dir: what type of data is requested. (ex. 'move' or 'type')
     :param name: the name of the resource to lookup (ex. 'pound' or 'fire')
+    :param url: the pokeAPI URL of the resource, will be construced from sub_dir
+    and name if not provided
     :param force_reload: force the download, even if it the file exists already
     :return the data requested, as a Python `dict` instance
     """
+    if url is None:
+        url = '/'.join([BASE_URL, sub_dir, name])
 
     cwd = os.getcwd()
     os.chdir(CACHE)
@@ -156,13 +163,18 @@ def lookup_data(sub_dir, name, force_reload=False):
             data = json.load(f)
     else:
         # If it doesn't exist, go download and save the resources.
-        r = requests.get('/'.join([BASE_URL, sub_dir, name]))
+        r = requests.get(url)
         r.raise_for_status()
         data = json.loads(r.text)
         with open('.'.join([name, 'json']), 'w') as f:
             json.dump(data, f, indent=2)
 
     os.chdir(cwd)  # Return to original working directory.
+
+    # Workaround for https://github.com/PokeAPI/pokeapi/issues/332
+    if "encounters" in url and not isinstance(data, dict):
+        data = {'results': data}
+
     return data
 
 
@@ -174,12 +186,19 @@ def lookup_resource(name, force_reload=False):
     force_reload parameter. Reference are saved to the user's home directory
     in a folder `~/.cache/pokebase`.
 
+    If the requested resource is a subresource (ie. 'pokemon/encounters'),
+    this returns False (but does not raise ane exception)
+
     :param name: which resource to download (ex. 'ability' or 'berry')
     :param force_reload: force the download, even if it the file exists already
     :return Python dict with the data this resource contains
     """
 
-    if name not in RESOURCES:
+    if name in SUBRESOURCES:
+        if force_reload or not os.path.exists(name):
+            safe_make_dirs(name)
+        return False
+    elif name not in RESOURCES:
         raise ValueError('resource not found ({}), check spelling'
                          .format(name))
 
@@ -271,10 +290,27 @@ def make_obj(d):
 
     if isinstance(d, dict):
         if 'url' in d.keys():
-            url = d['url']
-            name = url.split('/')[-2]      # Name of the data.
-            location = url.split('/')[-3]  # Where the data is located.
-            return NamedAPIResource(location, name, False)
+            url            = d['url']
+            # work with BASE_PATH, pokeapi inconsistent about http v. https
+            path_start_idx     = url.find(BASE_PATH)
+            resource_start_idx = path_start_idx + len(BASE_PATH) + 1 # 1 for '/'
+            path_components = url[resource_start_idx:].split('/')
+
+            location = path_components[0]
+            name     = path_components[1]
+
+            if len(path_components) == 3:
+                # eg. pokemon/4/
+                return NamedAPIResource(location, name, False)
+            elif len(path_components) == 4:
+                # ie. pokemon/4/encounters/
+                subname = path_components[2]
+                return NamedAPISubresource(location, name, subname, False)
+            else:
+                # Nothing should be in this format
+                raise ValueError('unexpected resource format ({})'
+                                .format(url))
+
         else:
             return APIMetadata(d)
     else:
@@ -311,16 +347,10 @@ class NamedAPIResource(object):
         r = resource.replace(' ', '-').lower()
         n = APIResourceList(r).id_to_name(name)
 
-        self.__data = {'type': r, 'name': n,
-                       'url': '/'.join([BASE_URL, r, n])}
-
         self.resource_type = r
 
-        if lookup:
-            self.load()
-            self.__is_loaded = True
-        else:
-            self.__is_loaded = False
+        self.init_data(r, n, '/'.join([BASE_URL, r, n]))
+        self.init_lookup(lookup)
 
     def __getattr__(self, attr):
         """Modified method to auto-load the data when it is needed.
@@ -332,7 +362,6 @@ class NamedAPIResource(object):
 
         if not self.__is_loaded:
             self.load()
-            self.__is_loaded = True
 
             return self.__getattribute__(attr)
 
@@ -346,6 +375,30 @@ class NamedAPIResource(object):
     def __repr__(self):
         return '<{} - {}>'.format(self.resource_type, self.name)
 
+    def init_data(self, resource_dir, resource_name, url):
+        """Function to initialize internals for debugging and lazy loading
+
+         Internal function, does not usually need to be called by the user, as
+         it is called automatically during initialization.
+
+        :return None
+        """
+        self.__data = {'type': resource_dir, 'name': resource_name, 'url': url}
+
+    def init_lookup(self, lookup=False):
+        """Function to decide whether to load reference data or indicate that
+         it has not yet been loaded.
+
+         Internal function, does not usually need to be called by the user, as
+         it is called automatically during initialization.
+
+        :return None
+        """
+        if lookup:
+            self.load()
+        else:
+            self.__is_loaded = False
+
     def load(self):
         """Function to collect reference data and connect it to the instance as
          attributes.
@@ -356,8 +409,10 @@ class NamedAPIResource(object):
         :return None
         """
 
+        url = self.__data['url']
         self.__data.update(lookup_data(self.__data['type'],
-                                       self.__data['name']))
+                                       self.__data['name'],
+                                       url))
 
         for k, v in self.__data.items():
 
@@ -366,6 +421,10 @@ class NamedAPIResource(object):
 
             elif isinstance(v, list):
                 self.__setattr__(k, [make_obj(i) for i in v])
+
+            elif isinstance(v, str) and v.find(BASE_PATH) == 0:
+                obj = make_obj({ 'url':  BASE_HOST + v + '/', 'debug': 1 })
+                self.__setattr__(k, obj)
             else:
                 self.__setattr__(k, v)
 
@@ -529,3 +588,45 @@ class SpriteResource(object):
         self.__setattr__('path', path)
 
         return None
+
+class NamedAPISubresource(NamedAPIResource):
+    """Extension of the NamedAPIResource, used for accessing endpoints like
+     /pokemon/1/encounters
+
+    """
+
+    def __init__(self, resource, resource_id, subname, lookup=True):
+        """Returns a new NamedAPISubresource object.
+
+        Specify lookup=False to conserve calls to the API and speed up your
+        program. This feature is used internally, but you will usually want it
+        left True. Leaving it False causes the object to act as a placeholder
+        for the data, until the data is called by the user.
+
+        :param str resource: The parent resource's name (ex. 'pokemon')
+        :param str resource_id: The id of the parent resource (ex. '1')
+        Note that the resource *name* does not work (so no 'bulbasaur')
+        :param str subname: The subresource's name (ex. 'encounters')
+        :param bool lookup: Whether or not to gather all the data on
+        construction
+        """
+
+        normed_resource = resource.replace(' ', '-').lower()
+        normed_subname  = subname.replace(' ', '-').lower()
+        # eg. pokemon/charmander/encounters will not work
+        # must be pokemon/4/encounters
+        # so no point in trying id_to_name on resource_id
+        resource_id = str(resource_id)
+
+        # There is no real resource. Just make the directory (sans checks)
+        dir_name = '/'.join([normed_resource, normed_subname])
+        safe_make_dirs(dir_name)
+
+        self.resource_type = '-'.join([normed_resource, normed_subname])
+
+        self.init_data(
+            dir_name,
+            resource_id,
+            '/'.join([BASE_URL, normed_resource, resource_id, normed_subname])
+        )
+        self.init_lookup(lookup)
