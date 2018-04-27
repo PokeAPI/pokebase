@@ -3,12 +3,13 @@
 
 from __future__ import unicode_literals
 import os
+import shutil
 import unittest
 
 import requests
 
 import pokebase as pb
-from pokebase.api import SPRITE_CACHE
+import pokebase.api as pb_api
 
 
 class TestNamedAPIResource(unittest.TestCase):
@@ -39,12 +40,23 @@ class TestNamedAPIResource(unittest.TestCase):
 class TestNamedAPISubresource(unittest.TestCase):
 
     def setUp(self):
+        self.OLD_CACHE = pb_api.CACHE
+        if os.environ.get('POKEBASE_TEST_ALL'):
+            pb_api.set_cache(self.OLD_CACHE + '-test')
+
+            def cleanTestPath ():
+                shutil.rmtree(pb_api.CACHE)
+                pb_api.set_cache(self.OLD_CACHE)
+
+            self.addCleanup(cleanTestPath)
+
         self.dragonite_encounters = pb.location_area_encounters(149)
         self.mew_encounters = pb.location_area_encounters(151)
 
     def testCount(self):
         self.assertGreater(len(self.dragonite_encounters.results), 0)
         self.assertEqual(len(self.mew_encounters.results), 0)
+
 
 class TestAPIResourceList(unittest.TestCase):
 
@@ -78,7 +90,7 @@ class TestSpriteResource(unittest.TestCase):
         self.doesnt_exists = pb.pokemon_sprite(-1)
 
     def testPath(self):
-        self.assertEqual(self.bulba.path, os.path.join(SPRITE_CACHE,
+        self.assertEqual(self.bulba.path, os.path.join(pb_api.SPRITE_CACHE,
                                                        'pokemon', '1.png'))
 
     def test404(self):

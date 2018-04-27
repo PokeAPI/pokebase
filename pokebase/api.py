@@ -50,6 +50,7 @@ RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'pokemon-form', 'pokemon-habitat', 'pokemon-shape',
              'pokemon-species', 'region', 'stat', 'super-contest-effect',
              'type', 'version', 'version-group']
+SUBRESOURCES = ['pokemon/encounters']
 
 
 def safe_make_dirs(path, mode=0o777):
@@ -185,12 +186,19 @@ def lookup_resource(name, force_reload=False):
     force_reload parameter. Reference are saved to the user's home directory
     in a folder `~/.cache/pokebase`.
 
+    If the requested resource is a subresource (ie. 'pokemon/encounters'),
+    this returns False (but does not raise ane exception)
+
     :param name: which resource to download (ex. 'ability' or 'berry')
     :param force_reload: force the download, even if it the file exists already
     :return Python dict with the data this resource contains
     """
 
-    if name not in RESOURCES:
+    if name in SUBRESOURCES:
+        if force_reload or not os.path.exists(name):
+            safe_make_dirs(name)
+        return False
+    elif name not in RESOURCES:
         raise ValueError('resource not found ({}), check spelling'
                          .format(name))
 
