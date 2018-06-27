@@ -8,7 +8,7 @@ import unittest
 import requests
 
 import pokebase as pb
-from pokebase.api import SPRITE_CACHE
+from pokebase.cache import SPRITE_CACHE
 
 
 class TestNamedAPIResource(unittest.TestCase):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .loaders import *
-from .api import NamedAPIResource, APIMetadata, APIResourceList
+from .interface import NamedAPIResource, APIMetadata, APIResourceList
 
 __all__ = ['NamedAPIResource',
            'APIMetadata',
@@ -48,7 +48,7 @@ __all__ = ['NamedAPIResource',
            'pokemon_habitat',
            'pokemon_shape',
            'pokemon_species',
-           'pokemon_sprite'
+           'pokemon_sprite',
            'region',
            'stat',
            'super_contest_effect',

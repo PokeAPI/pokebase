@@ -1,5 +1,15 @@
+#  Virtual Environment
 .venv/
+
+# Python file caches
 __pycache__/
-/.idea/
 **/*.pyc
+
+# Python setup.py distributions
 dist/
+
+# Editor support files
+# PyCharm
+.idea/
+# Visual Studio Code
+.vscode/

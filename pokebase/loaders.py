@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .api import NamedAPIResource, SpriteResource
+from .interface import NamedAPIResource, SpriteResource
 
 
 def berry(id_or_name):
