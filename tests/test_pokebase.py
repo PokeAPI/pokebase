@@ -1,7 +1,5 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 import os
 import unittest
 
@@ -47,10 +45,6 @@ class TestAPIResourceList(unittest.TestCase):
         self.assertEqual(len(self.berries), 64)
         self.assertEqual(len(self.contestEffects), 33)
 
-    def testIDConversion(self):
-        self.assertEqual(self.berries.id_to_name(8), 'persim')
-        self.assertEqual(self.contestEffects.id_to_name(3), '3')
-
 
 class TestAPIMetadata(unittest.TestCase):
 
@@ -60,21 +54,6 @@ class TestAPIMetadata(unittest.TestCase):
 
     def testSimpleAttr(self):
         self.assertEqual(self.name.name, 'Très tendre')
-
-
-class TestSpriteResource(unittest.TestCase):
-
-    def setUp(self):
-        self.bulba = pb.pokemon_sprite(1)
-        self.doesnt_exists = pb.pokemon_sprite(-1)
-
-    def testPath(self):
-        self.assertEqual(self.bulba.path, os.path.join(SPRITE_CACHE,
-                                                       'pokemon', '1.png'))
-
-    def test404(self):
-        self.assertRaises(requests.exceptions.HTTPError,
-                          lambda: self.doesnt_exists.path)
 
 
 if __name__ == '__main__':

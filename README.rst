@@ -7,6 +7,23 @@ README
 pokebase is a simple but powerful Python interface to the
 `PokéAPI database <https://pokeapi.co/>`_
 
+=========
+IMPORTANT
+=========
+pokebase is under heavy construction right now, in order to clean up the code
+and make it easier to maintain. I have also dropped support for Python 2.7, *for
+the time being*. Hopefully this can be added in later. I recommend you continue using
+version 1.2.0, download via ``pip``. Once I deem these new changes stable, I'll do another
+PyPI release (with fancy new ``shelve`` caching!)
+
+Planned To-do's for the current construction:
+
+ * sprite access (front, back, and shiny)
+ * APISubresource access
+ * more in-depth testing suite
+ * complete rewrite of the docstrings, and hosting on `readthdocs.io <https://readthedocs.org/>`_
+ * Python 2.7 support
+
 Installation
 ============
 
@@ -27,18 +44,13 @@ Usage
 >>> charmander.height
 6
 
->>> bulba = pb.pokemon_sprite(1)           # And sprites too!
->>> bulba.path
-'/home/user/.pokebase/sprite/pokemon/1.png'
->>>
-
 
 ... And it's just that simple.
 
 Version Support
 ===============
 
-pokebase currently (officially) supports Python 2.7 and 3.6 versions.
+pokebase currently (officially) supports Python 3.6
 
 Testing
 =======

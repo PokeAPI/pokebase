@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from .api import get_resource, get_data, get_sprite
+from .api import get_resource, get_data
 from .common import BASE_URL, SPRITE_URL
+
 
 def _make_obj(d):
     """Takes a dictionary and returns a NamedAPIResource or APIMetadata.
@@ -19,14 +20,45 @@ def _make_obj(d):
     if isinstance(d, dict):
         if 'url' in d.keys():
             url = d['url']
-            name = url.split('/')[-2]      # Name of the data.
+            id_ = url.split('/')[-2]      # ID of the data.
             location = url.split('/')[-3]  # Where the data is located.
-            return NamedAPIResource(location, name, False)
+            return NamedAPIResource(location, id_, lazy_load=True)
         else:
             return APIMetadata(d)
     else:
         return d
 
+
+def name_id_convert(resource_type, name_or_id):
+
+    if isinstance(name_or_id, int):
+        id_ = name_or_id
+        name = _convert_id_to_name(resource_type, id_)
+
+    elif isinstance(name_or_id, str):
+        name = name_or_id
+        id_ = _convert_name_to_id(resource_type, name)
+
+    return name, id_
+
+
+def _convert_id_to_name(resouce_type, id_):
+    resource_data = APIResourceList(resouce_type)
+
+    for resource in resource_data:
+        if resource['url'].split('/')[-2] == str(id_):
+
+            # Return the matching name, or None if it doesn't exsist.
+            return resource.get('name', None)
+
+
+def _convert_name_to_id(resource_type, name):
+
+    resource_data = APIResourceList(resource_type)
+
+    for resource in resource_data:
+        if resource.get('name') == name:
+            return int(resource.get('url').split('/')[-2])
 
 
 class NamedAPIResource(object):
@@ -42,33 +74,21 @@ class NamedAPIResource(object):
     but not identical.
     """
 
-    def __init__(self, resource, name, lookup=True):
-        """Returns a new NamedAPIResource object.
+    def __init__(self, resource_type, resource_name, lazy_load=False):
 
-        Specify lookup=False to conserve calls to the API and speed up your
-        program. This feature is used internally, but you will usually want it
-        left True. Leaving it False causes the object to act as a placeholder
-        for the data, until the data is called by the user.
+        name, id_ = name_id_convert(resource_type, resource_name)
+        url = '/'.join([BASE_URL, resource_type, str(id_)])
 
-        :param str resource: What kind of data you want (ex. 'move' or 'type')
-        :param str name: What the resource is called (ex. 'pound' or 'fire')
-        :param bool lookup: Whether or not to gather all the data on
-        construction
-        """
+        self.__dict__.update({'name': name,
+                              'resource_type': resource_type,
+                              'id_': id_,
+                              'url': url})
 
-        r = resource.replace(' ', '-').lower()
-        n = APIResourceList(r).id_to_name(name)
+        self.__loaded = False
 
-        self.__data = {'type': r, 'name': n,
-                       'url': '/'.join([BASE_URL, r, n])}
-
-        self.resource_type = r
-
-        if lookup:
-            self.load()
-            self.__is_loaded = True
-        else:
-            self.__is_loaded = False
+        if not lazy_load:
+            self._load()
+            self.__loaded = True
 
     def __getattr__(self, attr):
         """Modified method to auto-load the data when it is needed.
@@ -78,9 +98,9 @@ class NamedAPIResource(object):
         raised.
         """
 
-        if not self.__is_loaded:
-            self.load()
-            self.__is_loaded = True
+        if not self.__loaded:
+            self._load()
+            self.__loaded = True
 
             return self.__getattribute__(attr)
 
@@ -92,9 +112,9 @@ class NamedAPIResource(object):
         return str(self.name)
 
     def __repr__(self):
-        return '<{} - {}>'.format(self.resource_type, self.name)
+        return '<{}-{}>'.format(self.resource_type, self.name)
 
-    def load(self):
+    def _load(self):
         """Function to collect reference data and connect it to the instance as
          attributes.
 
@@ -104,20 +124,17 @@ class NamedAPIResource(object):
         :return None
         """
 
-        self.__data.update(get_data(self.__data['type'],
-                                       self.__data['name']))
+        data = get_data(self.resource_type, self.id_)
 
-        for k, v in self.__data.items():
+        for k, v in data.items():    # Make our custom objects from the data.
 
             if isinstance(v, dict):
-                self.__setattr__(k, _make_obj(v))
+                data[k] = _make_obj(v)
 
             elif isinstance(v, list):
-                self.__setattr__(k, [_make_obj(i) for i in v])
-            else:
-                self.__setattr__(k, v)
+                data[k] = [_make_obj(i) for i in v]
 
-        self.__is_loaded = True
+        self.__dict__.update(data)
 
         return None
 
@@ -156,31 +173,6 @@ class APIResourceList(object):
     def __str__(self):
         return str(self.__results)
 
-    def id_to_name(self, id_):
-        """Attempts to convert a given id_ into its corresponding name.
-
-        If no name exists, the function will return `str(id_)`
-        :param id_:
-        :return:
-        """
-
-        if self.name == 'location-area':
-            # location-areas can't be looked up by name.
-            return str(id_)
-
-        for res in self.__results:
-            if res.get('name', res['url'].split('/')[-2]) == id_:
-                # Runs when the end of the url is equal to `id_`.
-                return str(id_)
-
-            if res['url'].split('/')[-2] == str(id_):
-                # Runs when `id_` is found in a url that has a matching name.
-                return res.get('name', res['url'].split('/')[-2])
-
-        else:
-            raise ValueError('resource not found ({}), check spelling'
-                             .format(id_))
-
     @property
     def names(self):
         """Useful iterator for all the resource's names."""
@@ -205,75 +197,10 @@ class APIMetadata(object):
     """
 
     def __init__(self, data):
-        self.__data = data
 
-        for k, v in self.__data.items():
+        for k, v in data.items():
 
             if isinstance(v, dict):
-                self.__setattr__(k, _make_obj(v))
-            else:
-                self.__setattr__(k, v)
+                data[k] = _make_obj(v)
 
-    def __str__(self):
-        return str(self.__data)
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class SpriteResource(object):
-    """Class for downloading sprites to your computer and then locating them.
-
-    The only notable attribute of this class is a str with the absolute path to
-    the sprite. This is designed as such so that you can load the image in
-    whatever image class your specific application requires. The path can be
-    found in the `path` attribute. No surprises.
-
-    """
-
-    def __init__(self, resource, id_, lookup=False):
-        """Constructs a SpriteResource object.
-
-        :param resource: which type of sprite, currently, 'pokemon' is the only
-            valid option.
-        :param id_: id of the pokemon to download.
-        :param lookup: whether or not to retrieve the image immediately.
-        """
-
-        r = resource.replace(' ', '-').lower()
-        filename = '.'.join([str(id_), 'png'])
-
-        self.__data = {'type': r, 'path': filename,
-                       'url': '/'.join([SPRITE_URL, r, filename])}
-
-        if lookup:
-            self.load()
-            self.__is_loaded = True
-        else:
-            self.__is_loaded = False
-
-    def __getattr__(self, attr):
-        """Modified method to auto-load the data when it is needed.
-
-        If the sprite has not yet been downloaded, it is downloaded.
-        If the requested attribute is not found, AttributeError is
-        raised.
-        """
-
-        if not self.__is_loaded:
-            self.load()
-            self.__is_loaded = True
-
-            return self.__getattribute__(attr)
-
-        else:
-            raise AttributeError('{} object has no attribute {}'
-                                 .format(type(self), attr))
-
-    def load(self):
-        """Downloads the sprite from the internet."""
-        path = get_sprite(self.__data['type'], self.__data['path'])
-
-        self.__setattr__('path', path)
-
-        return None
+        self.__dict__.update(data)
