@@ -10,28 +10,28 @@ from .cache import save, load
 
 def _download_resource(url):
 
-    r = requests.get(url)
-    r.raise_for_status()
+    response = requests.get(url)
+    response.raise_for_status()
 
-    resource = json.loads(r.text)
+    resource = json.loads(response.text)
 
     if resource['count'] != len(resource['results']):
         # We got a section of all results; we want ALL of them.
         items = resource['count']
         url = '/'.join([url, '?limit={}'.format(items)])
 
-        r = requests.get(url)
-        r.raise_for_status()
-        resource = json.loads(r.text)
+        response = requests.get(url)
+        response.raise_for_status()
+        resource = json.loads(response.text)
 
     return resource
 
 
 def _download_data(url):
-    r = requests.get(url)
-    r.raise_for_status()
+    response = requests.get(url)
+    response.raise_for_status()
 
-    data = json.loads(r.text)
+    data = json.loads(response.text)
 
     return data
 
@@ -71,7 +71,7 @@ def get_data(resource, id_):
     except KeyError:
 
         data = _download_data(url)
-        
+
         save(data, url)
 
     return data

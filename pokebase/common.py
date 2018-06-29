@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 BASE_URL = 'http://pokeapi.co/api/v2'
-SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites'
 RESOURCES = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'characteristic', 'contest-effect', 'contest-type', 'egg-group',
              'encounter-condition', 'encounter-condition-value',

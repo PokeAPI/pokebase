@@ -1,32 +1,32 @@
 # -*- coding: utf-8 -*-
 
 from .api import get_resource, get_data
-from .common import BASE_URL, SPRITE_URL
+from .common import BASE_URL
 
 
-def _make_obj(d):
-    """Takes a dictionary and returns a NamedAPIResource or APIMetadata.
+def _make_obj(obj):
+    """Takes an object and returns a corresponding API class.
 
     The names and values of the data will match exactly with those found
     in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data
     may be of a standard type, such as an integer or string. For those cases,
     the input value is simply returned, unchanged.
 
-    :param d: the dictionary to be converted
+    :param obj: the object to be converted
     :return either the same value, if it does not need to be converted, or a
     NamedAPIResource or APIMetadata instance, depending on the data inputted.
     """
 
-    if isinstance(d, dict):
-        if 'url' in d.keys():
-            url = d['url']
+    if isinstance(obj, dict):
+        if 'url' in obj.keys():
+            url = obj['url']
             id_ = url.split('/')[-2]      # ID of the data.
             location = url.split('/')[-3]  # Where the data is located.
             return NamedAPIResource(location, id_, lazy_load=True)
-        else:
-            return APIMetadata(d)
-    else:
-        return d
+
+        return APIMetadata(obj)
+
+    return obj
 
 
 def name_id_convert(resource_type, name_or_id):
@@ -51,6 +51,8 @@ def _convert_id_to_name(resouce_type, id_):
             # Return the matching name, or None if it doesn't exsist.
             return resource.get('name', None)
 
+    return None
+
 
 def _convert_name_to_id(resource_type, name):
 
@@ -59,6 +61,8 @@ def _convert_name_to_id(resource_type, name):
     for resource in resource_data:
         if resource.get('name') == name:
             return int(resource.get('url').split('/')[-2])
+
+    return None
 
 
 class NamedAPIResource(object):
@@ -126,13 +130,14 @@ class NamedAPIResource(object):
 
         data = get_data(self.resource_type, self.id_)
 
-        for k, v in data.items():    # Make our custom objects from the data.
+        # Make our custom objects from the data.
+        for key, val in data.items():
 
-            if isinstance(v, dict):
-                data[k] = _make_obj(v)
+            if isinstance(val, dict):
+                data[key] = _make_obj(val)
 
-            elif isinstance(v, list):
-                data[k] = [_make_obj(i) for i in v]
+            elif isinstance(val, list):
+                data[key] = [_make_obj(i) for i in val]
 
         self.__dict__.update(data)
 
@@ -198,9 +203,9 @@ class APIMetadata(object):
 
     def __init__(self, data):
 
-        for k, v in data.items():
+        for key, val in data.items():
 
-            if isinstance(v, dict):
-                data[k] = _make_obj(v)
+            if isinstance(val, dict):
+                data[key] = _make_obj(val)
 
         self.__dict__.update(data)

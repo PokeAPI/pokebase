@@ -3,9 +3,6 @@
 import os
 import shelve
 
-import requests
-
-from .common import BASE_URL, SPRITE_URL, RESOURCES
 
 # Cache locations will be set at the end of this file.
 CACHE_DIR = None
@@ -37,8 +34,8 @@ def safe_make_dirs(path, mode=0o777):
     """
     try:
         os.makedirs(path, mode)
-    except OSError as e:
-        if e.errno != 17:  # File exists
+    except OSError as error:
+        if error.errno != 17:  # File exists
             raise
 
     return path
@@ -57,7 +54,7 @@ def get_default_cache():
     """
 
     xdg_cache_home = os.environ.get('XDG_CACHE_HOME') or \
-                     os.path.join(os.path.expanduser('~'), '.cache')
+        os.path.join(os.path.expanduser('~'), '.cache')
 
     return os.path.join(xdg_cache_home, 'pokebase')
 
@@ -77,15 +74,15 @@ def set_cache(new_path=None):
     directory
     :return: str, str
     """
-    global CACHE_DIR, API_CACHE, SPRITE_CACHE
 
     if new_path is None:
         new_path = get_default_cache()
 
-    CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
-    API_CACHE = os.path.join(CACHE_DIR, 'api.cache')
-    SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, 'sprite'))
+    cache_dir = safe_make_dirs(os.path.abspath(new_path))
+    api_cache = os.path.join(cache_dir, 'api.cache')
+    sprite_cache = safe_make_dirs(os.path.join(cache_dir, 'sprite'))
 
-    return CACHE_DIR, API_CACHE, SPRITE_CACHE
+    return cache_dir, api_cache, sprite_cache
 
-set_cache()
+
+CACHE_DIR, API_CACHE, SPRITE_CACHE = set_cache()
