@@ -53,5 +53,4 @@ __all__ = ['NamedAPIResource',
            'super_contest_effect',
            'type_',
            'version',
-           'version_group'
-]
+           'version_group']

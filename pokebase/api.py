@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
-
 import requests
 
 from .common import BASE_URL, RESOURCES
@@ -13,16 +11,17 @@ def _download_resource(url):
     response = requests.get(url)
     response.raise_for_status()
 
-    resource = json.loads(response.text)
+    resource = response.json()
 
     if resource['count'] != len(resource['results']):
         # We got a section of all results; we want ALL of them.
         items = resource['count']
-        url = '/'.join([url, '?limit={}'.format(items)])
+        num_items = {'limit': items}
 
-        response = requests.get(url)
+        response = requests.get(url, params=num_items)
         response.raise_for_status()
-        resource = json.loads(response.text)
+
+        resource = response.json()
 
     return resource
 
@@ -31,7 +30,7 @@ def _download_data(url):
     response = requests.get(url)
     response.raise_for_status()
 
-    data = json.loads(response.text)
+    data = response.json()
 
     return data
 
