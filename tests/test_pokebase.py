@@ -6,7 +6,6 @@ import unittest
 import requests
 
 import pokebase as pb
-from pokebase.cache import SPRITE_CACHE
 
 
 class TestNamedAPIResource(unittest.TestCase):
@@ -16,8 +15,8 @@ class TestNamedAPIResource(unittest.TestCase):
         self.evolution_chain = pb.evolution_chain(7)
 
     def testResourceType(self):
-        self.assertEqual(self.berry.resource_type, 'berry')
-        self.assertEqual(self.evolution_chain.resource_type, 'evolution-chain')
+        self.assertEqual(self.berry.endpoint, 'berry')
+        self.assertEqual(self.evolution_chain.endpoint, 'evolution-chain')
 
     def testSimpleAttr(self):
         self.assertEqual(self.berry.name, 'cheri')

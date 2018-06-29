@@ -52,6 +52,12 @@ Version Support
 
 pokebase currently (officially) supports Python 3.6
 
+Nomenclature
+============
+
+ * an ``endpoint`` is the results of an API call like ``http://pokeapi.co/api/v2/berry`` or ``http://pokeapi.co/api/v2/move``
+ * a ``resource`` is the actual data, from a call to ``http://pokeapi.co/api/v2/pokemon/1``
+
 Testing
 =======
 

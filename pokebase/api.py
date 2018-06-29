@@ -2,75 +2,44 @@
 
 import requests
 
-from .common import BASE_URL, RESOURCES
+from .common import BASE_URL, ENDPOINTS, api_url_build
 from .cache import save, load
 
 
-def _download_resource(url):
+def _call_api(endpoint, resource_id=None):
+    
+    url = api_url_build(endpoint, resource_id)
 
-    response = requests.get(url)
-    response.raise_for_status()
+    # Get a list of resources at the endpoint, if no resource_id is given.
+    get_endpoint_list = resource_id is None
 
-    resource = response.json()
-
-    if resource['count'] != len(resource['results']):
-        # We got a section of all results; we want ALL of them.
-        items = resource['count']
-        num_items = {'limit': items}
-
-        response = requests.get(url, params=num_items)
-        response.raise_for_status()
-
-        resource = response.json()
-
-    return resource
-
-
-def _download_data(url):
     response = requests.get(url)
     response.raise_for_status()
 
     data = response.json()
 
-    return data
+    if get_endpoint_list and data['count'] != len(data['results']):
+        # We got a section of all results; we want ALL of them.
+        items = data['count']
+        num_items = {'limit': items}
 
+        response = requests.get(url, params=num_items)
+        response.raise_for_status()
 
-def get_resource(resource):
-
-    if resource not in RESOURCES:
-        raise ValueError('resource not found ({})'.format(resource))
-
-    url = '/'.join([BASE_URL, resource])
-
-    try:
-        # Get data from cache.
-        data = load(url)
-
-    except KeyError:
-        # Data not found in the cache.
-        # Download data from the internet then.
-        data = _download_resource(url)
-
-        # save it to the cache for later.
-        save(data, url)
+        data = response.json()
 
     return data
 
 
-def get_data(resource, id_):
-
-    if not isinstance(id_, int):
-        raise ValueError('only lookup by id is supported')
-
-    url = '/'.join([BASE_URL, resource, str(id_)])
+def get_data(endpoint, resource_id=None):
 
     try:
-        data = load(url)
+        data = load(endpoint, resource_id)
 
     except KeyError:
 
-        data = _download_data(url)
+        data = _call_api(endpoint, resource_id)
 
-        save(data, url)
+        save(data, endpoint, resource_id)
 
     return data

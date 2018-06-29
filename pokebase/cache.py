@@ -3,6 +3,7 @@
 import os
 import shelve
 
+from .common import cache_uri_build
 
 # Cache locations will be set at the end of this file.
 CACHE_DIR = None
@@ -10,16 +11,20 @@ API_CACHE = None
 SPRITE_CACHE = None
 
 
-def save(data, url):
+def save(data, endpoint, resource_id=None):
+
+    uri = cache_uri_build(endpoint, resource_id)
 
     with shelve.open(API_CACHE) as cache:
-        cache[url] = data
+        cache[uri] = data
 
 
-def load(url):
+def load(endpoint, resource_id=None):
+
+    uri = cache_uri_build(endpoint, resource_id)
 
     with shelve.open(API_CACHE) as cache:
-        return cache[url]
+        return cache[uri]
 
 
 def safe_make_dirs(path, mode=0o777):

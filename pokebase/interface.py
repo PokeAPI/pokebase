@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .api import get_resource, get_data
+from .api import get_data
 from .common import BASE_URL
 
 
@@ -78,13 +78,13 @@ class NamedAPIResource(object):
     but not identical.
     """
 
-    def __init__(self, resource_type, resource_name, lazy_load=False):
+    def __init__(self, endpoint, name_or_id, lazy_load=False):
 
-        name, id_ = name_id_convert(resource_type, resource_name)
-        url = '/'.join([BASE_URL, resource_type, str(id_)])
+        name, id_ = name_id_convert(endpoint, name_or_id)
+        url = '/'.join([BASE_URL, endpoint, str(id_)])
 
         self.__dict__.update({'name': name,
-                              'resource_type': resource_type,
+                              'endpoint': endpoint,
                               'id_': id_,
                               'url': url})
 
@@ -116,7 +116,7 @@ class NamedAPIResource(object):
         return str(self.name)
 
     def __repr__(self):
-        return '<{}-{}>'.format(self.resource_type, self.name)
+        return '<{}-{}>'.format(self.endpoint, self.name)
 
     def _load(self):
         """Function to collect reference data and connect it to the instance as
@@ -128,7 +128,7 @@ class NamedAPIResource(object):
         :return None
         """
 
-        data = get_data(self.resource_type, self.id_)
+        data = get_data(self.endpoint, self.id_)
 
         # Make our custom objects from the data.
         for key, val in data.items():
@@ -157,15 +157,15 @@ class APIResourceList(object):
     `dict`s with names and urls together, whatever floats your boat.
     """
 
-    def __init__(self, name):
+    def __init__(self, endpoint):
         """Creates a new APIResourceList instance.
 
         :param name: the name of the resource to get (ex. 'berry' or 'move')
         """
 
-        response = get_resource(name)
+        response = get_data(endpoint)
 
-        self.name = name
+        self.name = endpoint
         self.__results = [i for i in response['results']]
         self.count = response['count']
 
