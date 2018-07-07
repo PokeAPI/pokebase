@@ -13,18 +13,40 @@ SPRITE_CACHE = None
 
 def save(data, endpoint, resource_id=None):
 
+    if data == dict():    # No point in saving empty data.
+        return None
+
+    if not isinstance(data, dict):
+        raise ValueError('Could not save non-dict data')
+
     uri = cache_uri_build(endpoint, resource_id)
 
-    with shelve.open(API_CACHE) as cache:
-        cache[uri] = data
+    try:
+        with shelve.open(API_CACHE) as cache:
+            cache[uri] = data
+    except OSError as error:
+        if error.errno == 11:  # Cache open by another person/program
+            # print('Cache unavailable, skipping save')
+            pass
+        else:
+            raise error
+
+    return None
 
 
 def load(endpoint, resource_id=None):
 
     uri = cache_uri_build(endpoint, resource_id)
 
-    with shelve.open(API_CACHE) as cache:
-        return cache[uri]
+    try:
+        with shelve.open(API_CACHE) as cache:
+            return cache[uri]
+    except OSError as error:
+        if error.errno == 11:  # Cache open by another person/program
+            # print('Cache unavailable, skipping load')
+            raise KeyError('Cache could not be opened.')
+        else:
+            raise error
 
 
 def safe_make_dirs(path, mode=0o777):
@@ -52,9 +74,6 @@ def get_default_cache():
     Adheres to the XDG Base Directory specification, as described in
     https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 
-    For backward-compatibility purposes, if the old location ~/.pokebase
-    exists use it instead of the XDG standard
-
     :return: the default cache directory absolute path
     """
 
@@ -80,14 +99,16 @@ def set_cache(new_path=None):
     :return: str, str
     """
 
+    global CACHE_DIR, API_CACHE, SPRITE_CACHE
+
     if new_path is None:
         new_path = get_default_cache()
 
-    cache_dir = safe_make_dirs(os.path.abspath(new_path))
-    api_cache = os.path.join(cache_dir, 'api.cache')
-    sprite_cache = safe_make_dirs(os.path.join(cache_dir, 'sprite'))
+    CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
+    API_CACHE = os.path.join(CACHE_DIR, 'api.cache')
+    SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, 'sprite'))
 
-    return cache_dir, api_cache, sprite_cache
+    return CACHE_DIR, API_CACHE, SPRITE_CACHE
 
 
 CACHE_DIR, API_CACHE, SPRITE_CACHE = set_cache()

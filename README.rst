@@ -20,7 +20,6 @@ Planned To-do's for the current construction:
 
  * sprite access (front, back, and shiny)
  * APISubresource access
- * more in-depth testing suite
  * complete rewrite of the docstrings, and hosting on `readthdocs.io <https://readthedocs.org/>`_
  * Python 2.7 support
 
@@ -62,15 +61,28 @@ Testing
 =======
 
 Python unittests are in a separate ``tests`` directory, and can be run via
-``python -m tests.test_pokebase``.
+``python -m unittest tests``.
 
 
-Important
----------
+Notes to the developer using this module
+----------------------------------------
 
 The quick data lookup for a Pokémon type, is ``pokebase.type_('type-name')``,
 not ``pokebase.type('type-name')``. This is because of a naming conflict with
-the built-in ``type`` function.
+the built-in ``type`` function, were you to ``from pokebase import *``.
+
+When changing the cache, avoid importing the cache constants directly. You should only
+import them with the whole cache module. If you do not do this, calling ``set_cache``
+will not change your local copy of the variable.
+
+NOT THIS!
+
+>>> from pokebase.cache import API_CACHE
+
+Do this :)
+
+>>> from pokebase import cache
+>>> cache.API_CACHE
 
 .. |travis| image:: https://travis-ci.org/GregHilmes/pokebase.svg?branch=master
    :target: https://travis-ci.org/GregHilmes/pokebase

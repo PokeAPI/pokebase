@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .interface import NamedAPIResource
+from .interface import APIResource
 
 
 def berry(id_or_name):
@@ -12,7 +12,7 @@ def berry(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('berry', id_or_name)
+    return APIResource('berry', id_or_name)
 
 
 def berry_firmness(id_or_name):
@@ -24,7 +24,7 @@ def berry_firmness(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('berry-firmness', id_or_name)
+    return APIResource('berry-firmness', id_or_name)
 
 
 def berry_flavor(id_or_name):
@@ -36,7 +36,7 @@ def berry_flavor(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('berry-flavor', id_or_name)
+    return APIResource('berry-flavor', id_or_name)
 
 
 def contest_type(id_or_name):
@@ -48,7 +48,7 @@ def contest_type(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('contest-type', id_or_name)
+    return APIResource('contest-type', id_or_name)
 
 
 def contest_effect(id_):
@@ -60,7 +60,7 @@ def contest_effect(id_):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('contest-effect', id_)
+    return APIResource('contest-effect', id_)
 
 
 def super_contest_effect(id_):
@@ -72,7 +72,7 @@ def super_contest_effect(id_):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('super-contest-effect', id_)
+    return APIResource('super-contest-effect', id_)
 
 
 def encounter_method(id_or_name):
@@ -84,7 +84,7 @@ def encounter_method(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('encounter-method', id_or_name)
+    return APIResource('encounter-method', id_or_name)
 
 
 def encounter_condition(id_or_name):
@@ -96,7 +96,7 @@ def encounter_condition(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('encounter-condition', id_or_name)
+    return APIResource('encounter-condition', id_or_name)
 
 
 def encounter_condition_value(id_or_name):
@@ -108,7 +108,7 @@ def encounter_condition_value(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('encounter-condition-value', id_or_name)
+    return APIResource('encounter-condition-value', id_or_name)
 
 
 def evolution_chain(id_):
@@ -120,7 +120,7 @@ def evolution_chain(id_):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('evolution-chain', id_)
+    return APIResource('evolution-chain', id_)
 
 
 def evolution_trigger(id_or_name):
@@ -132,7 +132,7 @@ def evolution_trigger(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('evolution-trigger', id_or_name)
+    return APIResource('evolution-trigger', id_or_name)
 
 
 def generation(id_or_name):
@@ -144,7 +144,7 @@ def generation(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('generation', id_or_name)
+    return APIResource('generation', id_or_name)
 
 
 def pokedex(id_or_name):
@@ -156,7 +156,7 @@ def pokedex(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pokedex', id_or_name)
+    return APIResource('pokedex', id_or_name)
 
 
 def version(id_or_name):
@@ -168,7 +168,7 @@ def version(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('version', id_or_name)
+    return APIResource('version', id_or_name)
 
 
 def version_group(id_or_name):
@@ -180,7 +180,7 @@ def version_group(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('version-group', id_or_name)
+    return APIResource('version-group', id_or_name)
 
 
 def item(id_or_name):
@@ -192,7 +192,7 @@ def item(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('item', id_or_name)
+    return APIResource('item', id_or_name)
 
 
 def item_attribute(id_or_name):
@@ -204,7 +204,7 @@ def item_attribute(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('item-attribute', id_or_name)
+    return APIResource('item-attribute', id_or_name)
 
 
 def item_category(id_or_name):
@@ -216,7 +216,7 @@ def item_category(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('item-category', id_or_name)
+    return APIResource('item-category', id_or_name)
 
 
 def item_fling_effect(id_or_name):
@@ -228,7 +228,7 @@ def item_fling_effect(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('item-fling-effect', id_or_name)
+    return APIResource('item-fling-effect', id_or_name)
 
 
 def item_pocket(id_or_name):
@@ -240,7 +240,7 @@ def item_pocket(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('item-pocket', id_or_name)
+    return APIResource('item-pocket', id_or_name)
 
 
 def machine(id_):
@@ -252,7 +252,7 @@ def machine(id_):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('machine', id_)
+    return APIResource('machine', id_)
 
 
 def move(id_or_name):
@@ -264,7 +264,7 @@ def move(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('move', id_or_name)
+    return APIResource('move', id_or_name)
 
 
 def move_ailment(id_or_name):
@@ -276,7 +276,7 @@ def move_ailment(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('move-ailment', id_or_name)
+    return APIResource('move-ailment', id_or_name)
 
 
 def move_battle_style(id_or_name):
@@ -288,7 +288,7 @@ def move_battle_style(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('move-battle-style', id_or_name)
+    return APIResource('move-battle-style', id_or_name)
 
 
 def move_category(id_or_name):
@@ -300,7 +300,7 @@ def move_category(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('move-category', id_or_name)
+    return APIResource('move-category', id_or_name)
 
 
 def move_damage_class(id_or_name):
@@ -312,7 +312,7 @@ def move_damage_class(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('move-damage-class', id_or_name)
+    return APIResource('move-damage-class', id_or_name)
 
 
 def move_learn_method(id_or_name):
@@ -324,7 +324,7 @@ def move_learn_method(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('move-learn-method', id_or_name)
+    return APIResource('move-learn-method', id_or_name)
 
 
 def move_target(id_or_name):
@@ -336,7 +336,7 @@ def move_target(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('move-target', id_or_name)
+    return APIResource('move-target', id_or_name)
 
 
 def location(id_):
@@ -348,7 +348,7 @@ def location(id_):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('location', id_)
+    return APIResource('location', id_)
 
 
 def location_area(id_):
@@ -360,7 +360,7 @@ def location_area(id_):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('location-area', id_)
+    return APIResource('location-area', id_)
 
 
 def pal_park_area(id_or_name):
@@ -372,7 +372,7 @@ def pal_park_area(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pal-park-area', id_or_name)
+    return APIResource('pal-park-area', id_or_name)
 
 
 def region(id_or_name):
@@ -384,7 +384,7 @@ def region(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('region', id_or_name)
+    return APIResource('region', id_or_name)
 
 
 def ability(id_or_name):
@@ -396,7 +396,7 @@ def ability(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('ability', id_or_name)
+    return APIResource('ability', id_or_name)
 
 
 def characteristic(id_):
@@ -408,7 +408,7 @@ def characteristic(id_):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('characteristic', id_)
+    return APIResource('characteristic', id_)
 
 
 def egg_group(id_or_name):
@@ -420,7 +420,7 @@ def egg_group(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('egg-group', id_or_name)
+    return APIResource('egg-group', id_or_name)
 
 
 def gender(id_or_name):
@@ -432,7 +432,7 @@ def gender(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('gender', id_or_name)
+    return APIResource('gender', id_or_name)
 
 
 def growth_rate(id_or_name):
@@ -444,7 +444,7 @@ def growth_rate(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('growth-rate', id_or_name)
+    return APIResource('growth-rate', id_or_name)
 
 
 def nature(id_or_name):
@@ -456,7 +456,7 @@ def nature(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('nature', id_or_name)
+    return APIResource('nature', id_or_name)
 
 
 def pokeathlon_stat(id_or_name):
@@ -468,7 +468,7 @@ def pokeathlon_stat(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pokeathlon-stat', id_or_name)
+    return APIResource('pokeathlon-stat', id_or_name)
 
 
 def pokemon(id_or_name):
@@ -480,7 +480,7 @@ def pokemon(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pokemon', id_or_name)
+    return APIResource('pokemon', id_or_name)
 
 
 def pokemon_color(id_or_name):
@@ -492,7 +492,7 @@ def pokemon_color(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pokemon-color', id_or_name)
+    return APIResource('pokemon-color', id_or_name)
 
 
 def pokemon_form(id_or_name):
@@ -504,7 +504,7 @@ def pokemon_form(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pokemon-form', id_or_name)
+    return APIResource('pokemon-form', id_or_name)
 
 
 def pokemon_habitat(id_or_name):
@@ -516,7 +516,7 @@ def pokemon_habitat(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pokemon-habitat', id_or_name)
+    return APIResource('pokemon-habitat', id_or_name)
 
 
 def pokemon_shape(id_or_name):
@@ -528,7 +528,7 @@ def pokemon_shape(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pokemon-shape', id_or_name)
+    return APIResource('pokemon-shape', id_or_name)
 
 
 def pokemon_species(id_or_name):
@@ -540,7 +540,7 @@ def pokemon_species(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('pokemon-species', id_or_name)
+    return APIResource('pokemon-species', id_or_name)
 
 
 def stat(id_or_name):
@@ -552,7 +552,7 @@ def stat(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('stat', id_or_name)
+    return APIResource('stat', id_or_name)
 
 
 def type_(id_or_name):
@@ -564,7 +564,7 @@ def type_(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('type', id_or_name)
+    return APIResource('type', id_or_name)
 
 
 def language(id_or_name):
@@ -576,4 +576,4 @@ def language(id_or_name):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return NamedAPIResource('language', id_or_name)
+    return APIResource('language', id_or_name)

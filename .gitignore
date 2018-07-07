@@ -8,6 +8,12 @@ __pycache__/
 # Python setup.py distributions
 dist/
 
+# Hypothesis for testing
+.hypothesis/
+
+# Local testing cache
+testing/
+
 # Editor support files
 # PyCharm
 .idea/

@@ -31,15 +31,16 @@ def _call_api(endpoint, resource_id=None):
     return data
 
 
-def get_data(endpoint, resource_id=None):
+def get_data(endpoint, resource_id=None, force_lookup=False):
 
-    try:
-        data = load(endpoint, resource_id)
+    if not force_lookup:
+        try:
+            data = load(endpoint, resource_id)
 
-    except KeyError:
-
+        except KeyError:
+            data = _call_api(endpoint, resource_id)
+            save(data, endpoint, resource_id)
+    else:
         data = _call_api(endpoint, resource_id)
-
-        save(data, endpoint, resource_id)
 
     return data

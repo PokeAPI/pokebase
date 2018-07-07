@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .api import get_data
-from .common import BASE_URL
+from .common import BASE_URL, api_url_build
 
 
 def _make_obj(obj):
@@ -14,36 +14,40 @@ def _make_obj(obj):
 
     :param obj: the object to be converted
     :return either the same value, if it does not need to be converted, or a
-    NamedAPIResource or APIMetadata instance, depending on the data inputted.
+    APIResource or APIMetadata instance, depending on the data inputted.
     """
 
     if isinstance(obj, dict):
         if 'url' in obj.keys():
             url = obj['url']
             id_ = url.split('/')[-2]      # ID of the data.
-            location = url.split('/')[-3]  # Where the data is located.
-            return NamedAPIResource(location, id_, lazy_load=True)
+            endpoint = url.split('/')[-3]  # Where the data is located.
+            return APIResource(endpoint, id_, lazy_load=True)
 
         return APIMetadata(obj)
 
     return obj
 
 
-def name_id_convert(resource_type, name_or_id):
+def name_id_convert(endpoint, name_or_id):
 
     if isinstance(name_or_id, int):
         id_ = name_or_id
-        name = _convert_id_to_name(resource_type, id_)
+        name = _convert_id_to_name(endpoint, id_)
 
     elif isinstance(name_or_id, str):
         name = name_or_id
-        id_ = _convert_name_to_id(resource_type, name)
+        id_ = _convert_name_to_id(endpoint, name)
+
+    else:
+        raise ValueError('the name or id \'{}\' could not be converted'
+                         .format(name_or_id))
 
     return name, id_
 
 
-def _convert_id_to_name(resouce_type, id_):
-    resource_data = APIResourceList(resouce_type)
+def _convert_id_to_name(endpoint, id_):
+    resource_data = get_data(endpoint)['results']
 
     for resource in resource_data:
         if resource['url'].split('/')[-2] == str(id_):
@@ -54,9 +58,9 @@ def _convert_id_to_name(resouce_type, id_):
     return None
 
 
-def _convert_name_to_id(resource_type, name):
+def _convert_name_to_id(endpoint, name):
 
-    resource_data = APIResourceList(resource_type)
+    resource_data = get_data(endpoint)['results']
 
     for resource in resource_data:
         if resource.get('name') == name:
@@ -65,7 +69,7 @@ def _convert_name_to_id(resource_type, name):
     return None
 
 
-class NamedAPIResource(object):
+class APIResource(object):
     """Core API class, used for accessing the bulk of the data.
 
     The class uses a modified __getattr__ function to serve the appropriate
@@ -81,7 +85,7 @@ class NamedAPIResource(object):
     def __init__(self, endpoint, name_or_id, lazy_load=False):
 
         name, id_ = name_id_convert(endpoint, name_or_id)
-        url = '/'.join([BASE_URL, endpoint, str(id_)])
+        url = api_url_build(endpoint, id_)
 
         self.__dict__.update({'name': name,
                               'endpoint': endpoint,
@@ -197,7 +201,7 @@ class APIMetadata(object):
     This class emulates a dictionary, but attribute lookup is via the `.`
     operator, not indexing. (ex. instance.attr, not instance['attr']).
 
-    Used for "Common Models" classes and NamedAPIResource helper classes.
+    Used for "Common Models" classes and APIResource helper classes.
     https://pokeapi.co/docsv2/#common-models
     """
 

@@ -1,5 +1,5 @@
 language: python
 python:
   - "3.6"
-install: pip install -r requirements.txt
-script: python -m tests.test_pokebase
+install: pip install -r requirements.testing.txt
+script: python -m unittest tests

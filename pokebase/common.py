@@ -16,11 +16,14 @@ ENDPOINTS = ['ability', 'berry', 'berry-firmness', 'berry-flavor',
              'type', 'version', 'version-group']
 
 
-def check_vaild(endpoint, resource_id=None):
+def validate(endpoint, resource_id=None):
+
     if endpoint not in ENDPOINTS:
         raise ValueError('Unknown API endpoint \'{}\''.format(endpoint))
 
-    if resource_id is not None and not isinstance(resource_id, int):
+    if (resource_id is not None and
+            not isinstance(resource_id, int)):
+
         raise ValueError('Bad id \'{}\''.format(resource_id))
 
     return None
@@ -28,7 +31,7 @@ def check_vaild(endpoint, resource_id=None):
 
 def api_url_build(endpoint, resource_id=None):
 
-    check_vaild(endpoint, resource_id)
+    validate(endpoint, resource_id)
 
     url = '/'.join([BASE_URL, endpoint])
 
@@ -40,9 +43,9 @@ def api_url_build(endpoint, resource_id=None):
 
 def cache_uri_build(endpoint, resource_id):
 
-    check_vaild(endpoint, resource_id)
+    validate(endpoint, resource_id)
 
     if resource_id is not None:
         return '/'.join([endpoint, str(resource_id)])
-    else:
-        return endpoint
+
+    return endpoint

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from .loaders import *
-from .interface import NamedAPIResource, APIMetadata, APIResourceList
+from .interface import APIResource, APIMetadata, APIResourceList
 
-__all__ = ['NamedAPIResource',
+__all__ = ['APIResource',
            'APIMetadata',
            'APIResourceList',
            'ability',
