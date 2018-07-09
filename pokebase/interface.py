@@ -82,7 +82,7 @@ class APIResource(object):
     but not identical.
     """
 
-    def __init__(self, endpoint, name_or_id, lazy_load=False):
+    def __init__(self, endpoint, name_or_id, lazy_load=False, force_lookup=False):
 
         name, id_ = name_id_convert(endpoint, name_or_id)
         url = api_url_build(endpoint, id_)
@@ -93,6 +93,7 @@ class APIResource(object):
                               'url': url})
 
         self.__loaded = False
+        self.__force_lookup = force_lookup
 
         if not lazy_load:
             self._load()
@@ -132,7 +133,7 @@ class APIResource(object):
         :return None
         """
 
-        data = get_data(self.endpoint, self.id_)
+        data = get_data(self.endpoint, self.id_, self.__force_lookup)
 
         # Make our custom objects from the data.
         for key, val in data.items():
@@ -161,13 +162,13 @@ class APIResourceList(object):
     `dict`s with names and urls together, whatever floats your boat.
     """
 
-    def __init__(self, endpoint):
+    def __init__(self, endpoint, force_lookup=False):
         """Creates a new APIResourceList instance.
 
         :param name: the name of the resource to get (ex. 'berry' or 'move')
         """
 
-        response = get_data(endpoint)
+        response = get_data(endpoint, force_lookup)
 
         self.name = endpoint
         self.__results = [i for i in response['results']]

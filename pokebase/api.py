@@ -42,5 +42,6 @@ def get_data(endpoint, resource_id=None, force_lookup=False):
             save(data, endpoint, resource_id)
     else:
         data = _call_api(endpoint, resource_id)
+        save(data, endpoint, resource_id)
 
     return data
