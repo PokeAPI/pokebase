@@ -168,7 +168,7 @@ class APIResourceList(object):
         :param name: the name of the resource to get (ex. 'berry' or 'move')
         """
 
-        response = get_data(endpoint, force_lookup)
+        response = get_data(endpoint, force_lookup=force_lookup)
 
         self.name = endpoint
         self.__results = [i for i in response['results']]
