@@ -2,4 +2,4 @@ language: python
 python:
   - "3.6"
 install: pip install -r requirements/test.txt
-script: python -m unittest tests
+script: python -m tests

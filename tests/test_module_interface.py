@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch
 
-from hypothesis import given, assume
+from hypothesis import given
 from hypothesis.strategies import dictionaries, text, sampled_from, integers, lists
 
 from pokebase import interface
@@ -19,14 +19,14 @@ class TestFunction__make_obj(unittest.TestCase):
         set_cache('testing')
 
     @given(obj=dictionaries(text(), text()))
-    def testDictionary(self, obj):
+    def testArg_obj_Dictionary(self, obj):
         self.assertIsInstance(interface._make_obj(obj), interface.APIMetadata)
 
     @given(endpoint=sampled_from(ENDPOINTS),
            resource_id=integers(min_value=1),
            obj=dictionaries(text(), text()))
     @patch('pokebase.interface.get_data')
-    def testDictionaryWithUrl(self, mock_get_data, endpoint, resource_id, obj):
+    def testArg_obj_DictionaryWithUrl(self, mock_get_data, endpoint, resource_id, obj):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, resource_id)}]}
 
@@ -34,11 +34,11 @@ class TestFunction__make_obj(unittest.TestCase):
         self.assertIsInstance(interface._make_obj(obj), interface.APIResource)
 
     @given(obj=lists(elements=text()))
-    def testList(self, obj):
+    def testArg_obj_List(self, obj):
         self.assertEqual(obj, interface._make_obj(obj))
 
     @given(obj=text())
-    def testStr(self, obj):
+    def testArg_obj_Str(self, obj):
         self.assertEqual(obj, interface._make_obj(obj))
 
 
@@ -53,7 +53,7 @@ class TestFunction__convert_id_to_name(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
-    def testExpectedParams(self, mock_get_data, name, endpoint, id_):
+    def testArgs(self, mock_get_data, name, endpoint, id_):
         
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
@@ -62,7 +62,7 @@ class TestFunction__convert_id_to_name(unittest.TestCase):
     @given(endpoint=sampled_from(ENDPOINTS),
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
-    def testNotNamedResource(self, mock_get_data, endpoint, id_):
+    def testEnv_NotNamedResource(self, mock_get_data, endpoint, id_):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_)}]}
 
@@ -71,7 +71,7 @@ class TestFunction__convert_id_to_name(unittest.TestCase):
     @given(endpoint=text(),
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
-    def testInvalidEndpoint(self, mock_get_data, endpoint, id_):
+    def testArg_endpoint_Text(self, mock_get_data, endpoint, id_):
 
         mock_get_data.side_effect = ValueError()
         
@@ -86,7 +86,7 @@ class TestFunction__convert_name_to_id(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            name=text())
     @patch('pokebase.interface.get_data')
-    def testExpectedParams(self, mock_get_data, id_, endpoint, name):
+    def testArgs(self, mock_get_data, id_, endpoint, name):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
@@ -95,7 +95,7 @@ class TestFunction__convert_name_to_id(unittest.TestCase):
     @given(endpoint=text(),
            name=text())
     @patch('pokebase.interface.get_data')
-    def testInvalidEndpoint(self, mock_get_data, endpoint, name):
+    def testArg_endpoint_Text(self, mock_get_data, endpoint, name):
 
         mock_get_data.side_effect = ValueError()
         
@@ -111,7 +111,7 @@ class TestFunction_name_id_convert(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
-    def testExpectedParamsWithID(self, mock_get_data, name, endpoint, id_):
+    def testArgs_WithID(self, mock_get_data, name, endpoint, id_):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
@@ -121,7 +121,7 @@ class TestFunction_name_id_convert(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            name=text())
     @patch('pokebase.interface.get_data')
-    def testExpectedParamsWithName(self, mock_get_data, id_, endpoint, name):
+    def testArgs_WithName(self, mock_get_data, id_, endpoint, name):
         
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
@@ -130,7 +130,7 @@ class TestFunction_name_id_convert(unittest.TestCase):
     @given(endpoint=text(),
            name=text())
     @patch('pokebase.interface.get_data')
-    def testInvalidEndpoint(self, mock_get_data, endpoint, name):
+    def testArg_endpoint_Text(self, mock_get_data, endpoint, name):
 
         mock_get_data.side_effect = ValueError()
         
@@ -149,7 +149,7 @@ class TestClass_APIResource(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            name=text())
     @patch('pokebase.interface.get_data')
-    def testExpectedParamsNameWithLazy(self, mock_get_data, id_, endpoint, name):
+    def testArgs_WithNameWithLazyLoad(self, mock_get_data, id_, endpoint, name):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
@@ -160,7 +160,7 @@ class TestClass_APIResource(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
-    def testExpectedParamsIDWithLazy(self, mock_get_data, name, endpoint, id_):
+    def testArgs_WithIDWithLazyLoad(self, mock_get_data, name, endpoint, id_):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
@@ -171,7 +171,7 @@ class TestClass_APIResource(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            name=text())
     @patch('pokebase.interface.get_data')
-    def testExpectedParamsNameWithoutLazy(self, mock_get_data, id_, endpoint, name):
+    def testAttrs_WithNameWithoutLazyLoad(self, mock_get_data, id_, endpoint, name):
 
         mock_get_data.side_effect = [{'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]},
                                      {'simple_attr': 10, 'list_attr': [{'name': 'mocked name'}]}]
@@ -186,7 +186,7 @@ class TestClass_APIResource(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
-    def testExpectedParamsIDWithoutLazy(self, mock_get_data, name, endpoint, id_):
+    def testAttrs_WithIDWithoutLazyLoad(self, mock_get_data, name, endpoint, id_):
 
         mock_get_data.side_effect = [{'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]},
                                      {'simple_attr': 10, 'list_attr': [{'name': 'mocked name'}], 'complex_attr': {'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, 10)}},
@@ -203,7 +203,7 @@ class TestClass_APIResource(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
-    def testLazyLoad(self, mock_get_data, name, endpoint, id_):
+    def testAttrs_WithLazyLoad(self, mock_get_data, name, endpoint, id_):
         mock_get_data.side_effect = [{'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]},
                                      {'simple_attr': 10, 'list_attr': [{'name': 'mocked name'}]}]
 
@@ -217,7 +217,7 @@ class TestClass_APIResource(unittest.TestCase):
     @given(endpoint=text(),
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
-    def testInvalidEndpoint(self, mock_get_data, endpoint, id_):
+    def testArg_endpoint_Text(self, mock_get_data, endpoint, id_):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_)}]}
 
@@ -229,7 +229,7 @@ class TestClass_APIResourceList(unittest.TestCase):
     
     @given(endpoint=sampled_from(ENDPOINTS))
     @patch('pokebase.interface.get_data')
-    def testExpectedParams(self, mock_get_data, endpoint):
+    def testArgs(self, mock_get_data, endpoint):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/1/'.format(endpoint)}]}
 
@@ -238,7 +238,7 @@ class TestClass_APIResourceList(unittest.TestCase):
     
     @given(endpoint=text())
     @patch('pokebase.interface.get_data')
-    def testUnexpectedParams(self, mock_get_data, endpoint):
+    def testArg_endpoint_Text(self, mock_get_data, endpoint):
 
         mock_get_data.side_effect = ValueError()
 
@@ -247,8 +247,8 @@ class TestClass_APIResourceList(unittest.TestCase):
 
 
 class TestClass_APIMetadata(unittest.TestCase):
-    
+
     @given(data=dictionaries(text(), text()))
-    def testExpectedParams(self, data):
+    def testArgs(self, data):
         self.assertIsInstance(interface.APIMetadata(data),
                               interface.APIMetadata)

@@ -24,24 +24,24 @@ class TestFunction__call_api(unittest.TestCase):
     @given(endpoint=sampled_from(ENDPOINTS),
            resource_id=(integers(min_value=1)))
     @patch('pokebase.api.requests.get')
-    def testExpectedParams(self, mock_get, endpoint, resource_id):
+    def testArgs(self, mock_get, endpoint, resource_id):
 
         mock_get.return_value.json.return_value = {'id': resource_id}
 
         self.assertEqual(api._call_api(endpoint, resource_id)['id'],
                          resource_id)
-    
+
     @given(endpoint=text(),
            resource_id=(integers(min_value=1)))
-    def testInvalidEndpoint(self, endpoint, resource_id):
+    def testArg_endpoint_Text(self, endpoint, resource_id):
         with self.assertRaises(ValueError):
             api._call_api(endpoint, resource_id)
 
     @given(endpoint=sampled_from(ENDPOINTS),
            resource_id=none())
     @patch('pokebase.api.requests.get')
-    def testNoneID(self, mock_get, endpoint, resource_id):
-        
+    def testArg_resource_id_None(self, mock_get, endpoint, resource_id):
+
         mock_get.return_value.json.return_value = {'count': 100, 'results': ['some', 'reults']}
 
         self.assertIsNotNone(api._call_api(endpoint, resource_id).get('count'))
@@ -49,7 +49,7 @@ class TestFunction__call_api(unittest.TestCase):
     @given(endpoint=sampled_from(ENDPOINTS),
            resource_id=(integers(min_value=1)))
     @patch('pokebase.api.requests.get')
-    def testError(self, mock_get, endpoint, resource_id):
+    def testEnv_ErrorResponse(self, mock_get, endpoint, resource_id):
         mock_get.return_value.raise_for_status.side_effect = HTTPError()
 
         with self.assertRaises(HTTPError):
@@ -66,7 +66,7 @@ class TestFunction_get_data(unittest.TestCase):
     @given(data=dictionaries(text(), text()),
            endpoint=sampled_from(ENDPOINTS),
            resource_id=integers(min_value=1))
-    def testExpectedParamsGettingCached(self, data, endpoint, resource_id):
+    def testArgs_GettingCachedData(self, data, endpoint, resource_id):
         assume(data != dict())
         # save some data to the cache
         save(data, endpoint, resource_id)
@@ -76,8 +76,8 @@ class TestFunction_get_data(unittest.TestCase):
            endpoint=sampled_from(ENDPOINTS),
            resource_id=integers(min_value=1))
     @patch('pokebase.api.requests.get')
-    def testExpectedParamsGettingNoncached(self, mock_get, data, endpoint, resource_id):
-        
+    def testArgs_GettingNoncachedData(self, mock_get, data, endpoint, resource_id):
+
         mock_get.return_value.json.return_value = data
 
         # assert that the data is not in the cache
@@ -90,12 +90,12 @@ class TestFunction_get_data(unittest.TestCase):
 
     @given(endpoint=text(),
            resource_id=integers(min_value=1))
-    def testBadParam_endpoint(self, endpoint, resource_id):
+    def testArg_endpoint_Text(self, endpoint, resource_id):
         with self.assertRaises(ValueError):
             api.get_data(endpoint, resource_id)
 
     @given(endpoint=sampled_from(ENDPOINTS),
            resource_id=text())
-    def testBadParam_resource_id(self, endpoint, resource_id):
+    def testArg_resource_id_Text(self, endpoint, resource_id):
         with self.assertRaises(ValueError):
             api.get_data(endpoint, resource_id)

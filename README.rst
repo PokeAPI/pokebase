@@ -61,7 +61,7 @@ Testing
 =======
 
 Python unittests are in a separate ``tests`` directory, and can be run via
-``python -m unittest tests``.
+``python -m tests``.
 
 
 Notes to the developer using this module
