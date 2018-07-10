@@ -95,6 +95,8 @@ class TestFunction_load(unittest.TestCase):
     @given(endpoint=sampled_from(ENDPOINTS),
            resource_id=integers(min_value=1))
     def testEnv_CacheFileNotFound(self, endpoint, resource_id):
+        # ensure it exsists before we delete it,
+        cache.set_cache('testing')
         os.remove(cache.API_CACHE)
         with self.assertRaises(KeyError):
             cache.load(endpoint, resource_id)
@@ -115,7 +117,7 @@ class TestFunction_load(unittest.TestCase):
             key = cache.cache_uri_build(endpoint, resource_id)
             if key in c:
                 del c[key]
-        
+
         with self.assertRaises(KeyError):
             cache.load(endpoint, resource_id)
 
