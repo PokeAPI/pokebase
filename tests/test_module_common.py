@@ -33,7 +33,7 @@ class TestFunction_validate(unittest.TestCase):
             common.validate(endpoint, resource_id)
 
 
-class TestFunction_apl_uri_build(unittest.TestCase):
+class TestFunction_api_uri_build(unittest.TestCase):
 
     @given(endpoint=sampled_from(common.ENDPOINTS),
            resource_id=integers(min_value=1))
