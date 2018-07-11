@@ -33,10 +33,10 @@ def api_url_build(endpoint, resource_id=None):
 
     validate(endpoint, resource_id)
 
-    url = '/'.join([BASE_URL, endpoint])
-
     if resource_id is not None:
-        url = '/'.join([url, str(resource_id)])
+        url = '/'.join([BASE_URL, endpoint,str(resource_id), ''])
+    else:
+        url = '/'.join([BASE_URL, endpoint, ''])
 
     return url
 
@@ -46,6 +46,6 @@ def cache_uri_build(endpoint, resource_id):
     validate(endpoint, resource_id)
 
     if resource_id is not None:
-        return '/'.join([endpoint, str(resource_id)])
-
-    return endpoint
+        return '/'.join([endpoint, str(resource_id), ''])
+    else:
+        return '/'.join([endpoint, ''])

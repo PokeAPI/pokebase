@@ -39,14 +39,14 @@ class TestFunction_api_uri_build(unittest.TestCase):
            resource_id=integers(min_value=1))
     def testArg_resource_id_NonNegInt(self, endpoint, resource_id):
         self.assertEqual(common.api_url_build(endpoint, resource_id),
-                         'http://pokeapi.co/api/v2/{}/{}'
+                         'http://pokeapi.co/api/v2/{}/{}/'
                          .format(endpoint, resource_id))
 
     @given(endpoint=sampled_from(common.ENDPOINTS),
            resource_id=none())
     def testArg_resource_id_None(self, endpoint, resource_id):
         self.assertEqual(common.api_url_build(endpoint, resource_id),
-                         'http://pokeapi.co/api/v2/{}'
+                         'http://pokeapi.co/api/v2/{}/'
                          .format(endpoint))
 
     @given(endpoint=text(),
@@ -62,13 +62,13 @@ class TestFunction_cache_uri_build(unittest.TestCase):
            resource_id=integers(min_value=1))
     def testArgs(self, endpoint, resource_id):
         self.assertEqual(common.cache_uri_build(endpoint, resource_id),
-                         '{}/{}'.format(endpoint, resource_id))
+                         '{}/{}/'.format(endpoint, resource_id))
 
     @given(endpoint=sampled_from(common.ENDPOINTS),
            resource_id=none())
     def testArg_resource_id_None(self, endpoint, resource_id):
         self.assertEqual(common.cache_uri_build(endpoint, resource_id),
-                         endpoint)
+                         '/'.join([endpoint, '']))
 
     @given(endpoint=text(),
            resource_id=none())
