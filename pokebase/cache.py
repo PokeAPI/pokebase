@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import dbm
 import os
 import shelve
 
@@ -42,8 +41,8 @@ def load(endpoint, resource_id=None):
     try:
         with shelve.open(API_CACHE) as cache:
             return cache[uri]
-    except dbm.error as error:
-        if 'Resource temporarily unavailable' in str(error):
+    except OSError as error:
+        if error.errno == 11:
             # Cache open by another person/program
             # print('Cache unavailable, skipping load')
             raise KeyError('Cache could not be opened.')
