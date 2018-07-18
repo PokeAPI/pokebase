@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from .api import get_data
-from .common import BASE_URL, api_url_build
+from .api import get_data, get_sprite
+from .common import BASE_URL, api_url_build, sprite_url_build
 
 
 def _make_obj(obj):
@@ -214,3 +214,47 @@ class APIMetadata(object):
                 data[key] = _make_obj(val)
 
         self.__dict__.update(data)
+
+
+class SpriteResource(object):
+
+    def __init__(self, sprite_type, sprite_id, **kwargs):
+
+        url = sprite_url_build(sprite_type, sprite_id, **kwargs)
+
+        self.__dict__.update({'sprite_id': sprite_id,
+                              'sprite_type': sprite_type,
+                              'url': url})
+
+        self.__loaded = False
+        self.__force_lookup = kwargs.get('force_lookup', False)
+        self.__orginal_kwargs = kwargs
+
+        if not kwargs.get('lazy_load', False):
+            self._load()
+            self.__loaded = True
+
+    def _load(self):
+
+        data = get_sprite(self.sprite_type, self.sprite_id, **self.__orginal_kwargs)
+        self.__dict__.update(data)
+
+        return None
+
+    def __getattr__(self, attr):
+        """Modified method to auto-load the data when it is needed.
+
+        If the data has not yet been looked up, it is loaded, and then checked
+        for the requested attribute. If it is not found, AttributeError is
+        raised.
+        """
+
+        if not self.__loaded:
+            self._load()
+            self.__loaded = True
+
+            return self.__getattribute__(attr)
+
+        else:
+            raise AttributeError('{} object has no attribute {}'
+                                 .format(type(self), attr))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .interface import APIResource
+from .interface import APIResource, SpriteResource
 
 
 def berry(id_or_name):
@@ -577,3 +577,8 @@ def language(id_or_name):
     :return: NamedAPIResource with the appropriate data
     """
     return APIResource('language', id_or_name)
+
+
+def sprite(sprite_type, sprite_id, **kwargs):
+
+    return SpriteResource(sprite_type, sprite_id, **kwargs)

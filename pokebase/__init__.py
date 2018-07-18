@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from .loaders import *
-from .interface import APIResource, APIMetadata, APIResourceList
+from .interface import APIResource, APIMetadata, APIResourceList, SpriteResource
 
 __all__ = ['APIResource',
            'APIMetadata',
            'APIResourceList',
+           'SpriteResource',
            'ability',
            'berry',
            'berry_firmness',

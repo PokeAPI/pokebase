@@ -18,7 +18,6 @@ PyPI release (with fancy new ``shelve`` caching!)
 
 Planned To-do's for the current construction:
 
- * sprite access (front, back, and shiny)
  * APISubresource access
  * complete rewrite of the docstrings, and hosting on `readthdocs.io <https://readthedocs.org/>`_
  * Python 2.7 support
@@ -34,7 +33,7 @@ Usage
 =====
 
 >>> import pokebase as pb
->>> chesto = pb.NamedAPIResource('berry', 'chesto')
+>>> chesto = pb.APIResource('berry', 'chesto')
 >>> chesto.name
 'chesto'
 >>> chesto.natural_gift_type.name
@@ -42,6 +41,17 @@ Usage
 >>> charmander = pb.pokemon('charmander')  # Quick lookup.
 >>> charmander.height
 6
+>>> # Now with sprites! (again!)
+>>> s1 = pb.SpriteResource('pokemon', 17)
+<pokebase.interface.SpriteResource object at 0x7f2f15660860>
+>>> s1.url
+'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png'
+>>> s2 = pb.SpriteResource('pokemon', 1, other_sprites=True, official_artwork=True)
+>>> s2.path
+'/home/user/.cache/pokebase/sprite/pokemon/other-sprites/official-artwork/1.png'
+>>> s3 = pb.SpriteResource('pokemon', 3, female=True, back=True)
+>>> s3.img_data
+b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00 ... \xca^\x7f\xbbd*\x00\x00\x00\x00IEND\xaeB`\x82'
 
 
 ... And it's just that simple.

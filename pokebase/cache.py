@@ -3,7 +3,7 @@
 import os
 import shelve
 
-from .common import cache_uri_build
+from .common import cache_uri_build, sprite_filepath_build
 
 # Cache locations will be set at the end of this file.
 CACHE_DIR = None
@@ -34,6 +34,20 @@ def save(data, endpoint, resource_id=None):
     return None
 
 
+def save_sprite(img_data, sprite_type, sprite_id, **kwargs):
+
+    abs_path = get_sprite_path(sprite_type, sprite_id, **kwargs)
+
+    # Make intermediate directories; this line removes the file+extension.
+    dirs = abs_path.rpartition(os.path.sep)[0]
+    safe_make_dirs(dirs)
+
+    with open(abs_path, 'wb') as img_file:
+        img_file.write(img_data)
+
+    return None
+
+
 def load(endpoint, resource_id=None):
 
     uri = cache_uri_build(endpoint, resource_id)
@@ -48,6 +62,15 @@ def load(endpoint, resource_id=None):
             raise KeyError('Cache could not be opened.')
         else:
             raise
+
+
+def load_sprite(sprite_type, sprite_id, **kwargs):
+    abs_path = get_sprite_path(sprite_type, sprite_id, **kwargs)
+
+    with open(abs_path, 'rb') as img_file:
+        img_data = img_file.read()
+
+    return img_data
 
 
 def safe_make_dirs(path, mode=0o777):
@@ -82,6 +105,13 @@ def get_default_cache():
         os.path.join(os.path.expanduser('~'), '.cache')
 
     return os.path.join(xdg_cache_home, 'pokebase')
+
+
+def get_sprite_path(sprite_type, sprite_id, **kwargs):
+    rel_filepath = sprite_filepath_build(sprite_type, sprite_id, **kwargs)
+    abs_path = os.path.join(SPRITE_CACHE, rel_filepath)
+
+    return abs_path
 
 
 def set_cache(new_path=None):
