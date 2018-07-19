@@ -34,16 +34,16 @@ def save(data, endpoint, resource_id=None):
     return None
 
 
-def save_sprite(img_data, sprite_type, sprite_id, **kwargs):
+def save_sprite(data, sprite_type, sprite_id, **kwargs):
 
-    abs_path = get_sprite_path(sprite_type, sprite_id, **kwargs)
+    abs_path = data['path']
 
     # Make intermediate directories; this line removes the file+extension.
     dirs = abs_path.rpartition(os.path.sep)[0]
     safe_make_dirs(dirs)
 
     with open(abs_path, 'wb') as img_file:
-        img_file.write(img_data)
+        img_file.write(data['img_data'])
 
     return None
 
@@ -70,7 +70,7 @@ def load_sprite(sprite_type, sprite_id, **kwargs):
     with open(abs_path, 'rb') as img_file:
         img_data = img_file.read()
 
-    return img_data
+    return dict(img_data=img_data, path=abs_path)
 
 
 def safe_make_dirs(path, mode=0o777):
