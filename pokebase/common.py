@@ -65,6 +65,18 @@ def sprite_url_build(sprite_type, sprite_id, **kwargs):
     return url
 
 
+def subresource_url_build(endpoint, resource_id, subresource):
+
+    url = '/'.join([BASE_URL, endpoint, resource_id, subresource])
+    return url
+
+
+def subresource_cache_uri_build(endpoint, resource_id, subresource):
+
+    uri = '/'.join([endpoint, resource_id, subresource])
+    return uri
+
+
 def sprite_filepath_build(sprite_type, sprite_id, **kwargs):
     """returns the filepath of the sprite *relative to SPRITE_CACHE*"""
 

@@ -140,7 +140,9 @@ class APIResource(object):
 
             if key == 'location_area_encounters' \
                     and self.endpoint == 'pokemon':
-                encounters = get_encounters(val)
+
+                params = val.split('/')[-3:len(val)]
+                encounters = get_encounters(*params)
                 data[key] = [_make_obj(enc) for enc in encounters]
                 continue
 

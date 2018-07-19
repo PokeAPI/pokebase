@@ -3,7 +3,7 @@
 import os
 import shelve
 
-from .common import cache_uri_build, sprite_filepath_build
+from .common import cache_uri_build, sprite_filepath_build, subresource_cache_uri_build
 
 # Cache locations will be set at the end of this file.
 CACHE_DIR = None
@@ -143,3 +143,33 @@ def set_cache(new_path=None):
 
 
 CACHE_DIR, API_CACHE, SPRITE_CACHE = set_cache()
+
+
+def save_subresource(data, endpoint, resource_id, subresource):
+
+    uri = subresource_cache_uri_build(endpoint, resource_id, subresource)
+
+    with shelve.open(API_CACHE) as cache:
+        cache[uri] = data
+    
+    return None
+
+
+def load_subresource(endpoint, resource_id, subresource):
+
+    uri = subresource_cache_uri_build(endpoint, resource_id, subresource)
+
+    print('getting cached')
+
+    try:
+        with shelve.open(API_CACHE) as cache:
+            data = cache[uri]
+    except OSError as error:
+        if error.errno == 11:
+            # Cache open by another person/program
+            # print('Cache unavailable, skipping load')
+            raise KeyError('Cache could not be opened.')
+        else:
+            raise
+
+    return data

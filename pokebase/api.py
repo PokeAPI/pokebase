@@ -2,8 +2,8 @@
 
 import requests
 
-from .common import BASE_URL, ENDPOINTS, api_url_build, sprite_url_build
-from .cache import save, load, save_sprite, load_sprite, get_sprite_path
+from .common import BASE_URL, ENDPOINTS, api_url_build, sprite_url_build, subresource_url_build
+from .cache import save, load, save_sprite, load_sprite, get_sprite_path, save_subresource, load_subresource
 
 
 def _call_api(endpoint, resource_id=None):
@@ -74,10 +74,21 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
     return data
 
 
-# "location_area_encounters": "/api/v2/pokemon/12/encounters",
-def get_encounters(encouter_url):
+def get_encounters(endpoint, resource_id, subresource, **kwargs):
 
-    response = requests.get('http://pokeapi.co' + encouter_url)
+    if not kwargs.get('force_lookup', False):
+        try:
+            data = load_subresource(endpoint, resource_id, subresource)
+            return data
+        except KeyError:
+            pass
+
+    url = subresource_url_build(endpoint, resource_id, subresource)
+
+    response = requests.get(url)
     response.raise_for_status()
 
-    return response.json()
+    data = response.json()
+    save_subresource(data, endpoint, resource_id, subresource)
+
+    return data
