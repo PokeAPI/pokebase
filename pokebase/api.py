@@ -72,3 +72,12 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
     save_sprite(data, sprite_type, sprite_id, **kwargs)
 
     return data
+
+
+# "location_area_encounters": "/api/v2/pokemon/12/encounters",
+def get_encounters(encouter_url):
+
+    response = requests.get('http://pokeapi.co' + encouter_url)
+    response.raise_for_status()
+
+    return response.json()

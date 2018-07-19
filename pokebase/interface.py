@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .api import get_data, get_sprite
+from .api import get_data, get_sprite, get_encounters
 from .common import BASE_URL, api_url_build, sprite_url_build
 
 
@@ -138,6 +138,12 @@ class APIResource(object):
         # Make our custom objects from the data.
         for key, val in data.items():
 
+            if key == 'location_area_encounters' \
+                    and self.endpoint == 'pokemon':
+                encounters = get_encounters(val)
+                data[key] = [_make_obj(enc) for enc in encounters]
+                continue
+
             if isinstance(val, dict):
                 data[key] = _make_obj(val)
 
@@ -212,6 +218,9 @@ class APIMetadata(object):
 
             if isinstance(val, dict):
                 data[key] = _make_obj(val)
+
+            if isinstance(val, list):
+                data[key] = [_make_obj(i) for i in val]
 
         self.__dict__.update(data)
 
