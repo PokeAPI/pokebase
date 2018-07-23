@@ -224,6 +224,20 @@ class TestClass_APIResource(unittest.TestCase):
         with self.assertRaises(ValueError):
             interface.APIResource(endpoint, id_)
 
+    @given(id_=integers(min_value=1))
+    @patch('pokebase.interface.get_data')
+    def testHasLocationAreaEncounters(self, mock_get_data, id_):
+
+        mock_get_data.side_effect = [{'count': 1, 'results': [{'url': 'mocked.url/api/v2/pokemon/{}/'.format(id_), 'name': 'mocked name'}]},
+                                     {'location_area_encounters': '/api/v2/pokemon/{}/encounters'.format(id_)},
+                                     [{'version_details': [], 'location_area': {'url': 'mocked.url/api/v2/location-area/1/', 'name': 'mocked location_area'}}],
+                                     {'count': 1, 'results': [{'url': 'mocked.url/api/v2/location-area/1/', 'name': 'mocked name'}]}]
+        pkmn = interface.APIResource('pokemon', id_)
+        # Should be list or empty list
+        self.assertIsInstance(pkmn.location_area_encounters, list)
+        # would be str if it was not handled
+        self.assertNotIsInstance(pkmn.location_area_encounters, str)
+
 
 class TestClass_APIResourceList(unittest.TestCase):
     

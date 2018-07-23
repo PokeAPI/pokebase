@@ -2,13 +2,13 @@
 
 import requests
 
-from .common import BASE_URL, ENDPOINTS, api_url_build, sprite_url_build, subresource_url_build
-from .cache import save, load, save_sprite, load_sprite, get_sprite_path, save_subresource, load_subresource
+from .common import BASE_URL, ENDPOINTS, api_url_build, sprite_url_build
+from .cache import save, load, save_sprite, load_sprite, get_sprite_path
 
 
-def _call_api(endpoint, resource_id=None):
+def _call_api(endpoint, resource_id=None, subresource=None):
     
-    url = api_url_build(endpoint, resource_id)
+    url = api_url_build(endpoint, resource_id, subresource)
 
     # Get a list of resources at the endpoint, if no resource_id is given.
     get_endpoint_list = resource_id is None
@@ -31,17 +31,17 @@ def _call_api(endpoint, resource_id=None):
     return data
 
 
-def get_data(endpoint, resource_id=None, force_lookup=False):
+def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
 
-    if not force_lookup:
+    if not kwargs.get('force_lookup', False):
         try:
-            data = load(endpoint, resource_id)
+            data = load(endpoint, resource_id, subresource)
             return data
         except KeyError:
             pass
 
-    data = _call_api(endpoint, resource_id)
-    save(data, endpoint, resource_id)
+    data = _call_api(endpoint, resource_id, subresource)
+    save(data, endpoint, resource_id, subresource)
 
     return data
 
@@ -70,25 +70,5 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
 
     data = _call_sprite_api(sprite_type, sprite_id, **kwargs)
     save_sprite(data, sprite_type, sprite_id, **kwargs)
-
-    return data
-
-
-def get_encounters(endpoint, resource_id, subresource, **kwargs):
-
-    if not kwargs.get('force_lookup', False):
-        try:
-            data = load_subresource(endpoint, resource_id, subresource)
-            return data
-        except KeyError:
-            pass
-
-    url = subresource_url_build(endpoint, resource_id, subresource)
-
-    response = requests.get(url)
-    response.raise_for_status()
-
-    data = response.json()
-    save_subresource(data, endpoint, resource_id, subresource)
 
     return data

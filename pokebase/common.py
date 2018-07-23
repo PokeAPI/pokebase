@@ -33,26 +33,30 @@ def validate(endpoint, resource_id=None):
     return None
 
 
-def api_url_build(endpoint, resource_id=None):
+def api_url_build(endpoint, resource_id=None, subresource=None):
 
     validate(endpoint, resource_id)
 
     if resource_id is not None:
-        url = '/'.join([BASE_URL, endpoint,str(resource_id), ''])
-    else:
-        url = '/'.join([BASE_URL, endpoint, ''])
+        if subresource is not None:
+            return '/'.join([BASE_URL, endpoint, str(resource_id), subresource, ''])
 
-    return url
+        return '/'.join([BASE_URL, endpoint, str(resource_id), ''])
+
+    return '/'.join([BASE_URL, endpoint, ''])
 
 
-def cache_uri_build(endpoint, resource_id):
+def cache_uri_build(endpoint, resource_id=None, subresource=None):
 
     validate(endpoint, resource_id)
 
     if resource_id is not None:
+        if subresource is not None:
+            return '/'.join([endpoint, str(resource_id), subresource, ''])
+
         return '/'.join([endpoint, str(resource_id), ''])
-    else:
-        return '/'.join([endpoint, ''])
+
+    return '/'.join([endpoint, ''])
 
 
 def sprite_url_build(sprite_type, sprite_id, **kwargs):
@@ -63,18 +67,6 @@ def sprite_url_build(sprite_type, sprite_id, **kwargs):
     url = '/'.join([SPRITE_URL, sprite_type, *options, filename])
 
     return url
-
-
-def subresource_url_build(endpoint, resource_id, subresource):
-
-    url = '/'.join([BASE_URL, endpoint, resource_id, subresource])
-    return url
-
-
-def subresource_cache_uri_build(endpoint, resource_id, subresource):
-
-    uri = '/'.join([endpoint, resource_id, subresource])
-    return uri
 
 
 def sprite_filepath_build(sprite_type, sprite_id, **kwargs):

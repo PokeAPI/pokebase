@@ -50,6 +50,13 @@ class TestFunction_save(unittest.TestCase):
 
     @given(data=dictionaries(text(), text()),
            endpoint=sampled_from(ENDPOINTS),
+           resource_id=integers(min_value=1),
+           subresource=text())
+    def testArg_subresource_Text(self, data, endpoint, resource_id, subresource):
+        self.assertIsNone(cache.save(data, endpoint, resource_id, subresource))
+
+    @given(data=dictionaries(text(), text()),
+           endpoint=sampled_from(ENDPOINTS),
            resource_id=integers(min_value=1))
     def testEnv_CacheFileNotFound(self, data, endpoint, resource_id):
         assume(data != dict())
@@ -91,6 +98,15 @@ class TestFunction_load(unittest.TestCase):
     def testArg_resource_id_Text(self, endpoint, resource_id):
         with self.assertRaises(ValueError):
             cache.load(endpoint, resource_id)
+
+    @given(data=dictionaries(text(), text()),
+           endpoint=sampled_from(ENDPOINTS),
+           resource_id=integers(min_value=1),
+           subresource=text())
+    def testArg_subresource_Text(self, data, endpoint, resource_id, subresource):
+        assume(data != dict())
+        cache.save(data, endpoint, resource_id, subresource)
+        self.assertEqual(data, cache.load(endpoint, resource_id, subresource))
 
     @given(endpoint=sampled_from(ENDPOINTS),
            resource_id=integers(min_value=1))

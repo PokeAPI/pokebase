@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .api import get_data, get_sprite, get_encounters
+from .api import get_data, get_sprite
 from .common import BASE_URL, api_url_build, sprite_url_build
 
 
@@ -133,7 +133,7 @@ class APIResource(object):
         :return None
         """
 
-        data = get_data(self.endpoint, self.id_, self.__force_lookup)
+        data = get_data(self.endpoint, self.id_, force_lookup=self.__force_lookup)
 
         # Make our custom objects from the data.
         for key, val in data.items():
@@ -141,8 +141,9 @@ class APIResource(object):
             if key == 'location_area_encounters' \
                     and self.endpoint == 'pokemon':
 
-                params = val.split('/')[-3:len(val)]
-                encounters = get_encounters(*params)
+                params = val.split('/')[-3:]
+                ep, id_, subr = params
+                encounters = get_data(ep, int(id_), subr)
                 data[key] = [_make_obj(enc) for enc in encounters]
                 continue
 

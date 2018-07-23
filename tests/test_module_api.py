@@ -47,6 +47,15 @@ class TestFunction__call_api(unittest.TestCase):
         self.assertIsNotNone(api._call_api(endpoint, resource_id).get('count'))
 
     @given(endpoint=sampled_from(ENDPOINTS),
+           resource_id=integers(min_value=1),
+           subresource=text())
+    @patch('pokebase.api.requests.get')
+    def testArg_subresource_Text(self, mock_get, endpoint, resource_id, subresource):
+        mock_get.return_value.json.return_value = {'version_details': 'foo'}
+
+        self.assertIsNotNone(api._call_api(endpoint, resource_id, subresource).get('version_details'))
+
+    @given(endpoint=sampled_from(ENDPOINTS),
            resource_id=(integers(min_value=1)))
     @patch('pokebase.api.requests.get')
     def testEnv_ErrorResponse(self, mock_get, endpoint, resource_id):
@@ -87,6 +96,15 @@ class TestFunction_get_data(unittest.TestCase):
                 del cache_file[key]
 
         self.assertEqual(data, api.get_data(endpoint, resource_id))
+
+    @given(endpoint=sampled_from(ENDPOINTS),
+           resource_id=integers(min_value=1),
+           subresource=text())
+    @patch('pokebase.api.requests.get')
+    def testArg_subresource_Text(self, mock_get, endpoint, resource_id, subresource):
+        mock_get.return_value.json.return_value = {'version_details': 'foo'}
+
+        self.assertIsNotNone(api.get_data(endpoint, resource_id, subresource).get('version_details'))
 
     @given(endpoint=text(),
            resource_id=integers(min_value=1))

@@ -55,6 +55,14 @@ class TestFunction_api_uri_build(unittest.TestCase):
         with self.assertRaises(ValueError):
             common.api_url_build(endpoint, resource_id)
 
+    @given(endpoint=sampled_from(common.ENDPOINTS),
+           resource_id=integers(min_value=1),
+           subresource=text())
+    def testArg_subresource_Text(self, endpoint, resource_id, subresource):
+        self.assertEqual(common.api_url_build(endpoint, resource_id, subresource),
+                         'http://pokeapi.co/api/v2/{}/{}/{}/'
+                         .format(endpoint, resource_id, subresource))
+
 
 class TestFunction_cache_uri_build(unittest.TestCase):
 
@@ -75,3 +83,10 @@ class TestFunction_cache_uri_build(unittest.TestCase):
     def testArg_endpoint_Text(self, endpoint, resource_id):
         with self.assertRaises(ValueError):
             common.cache_uri_build(endpoint, resource_id)
+
+    @given(endpoint=sampled_from(common.ENDPOINTS),
+           resource_id=integers(min_value=1),
+           subresource=text())
+    def testArg_subresource_Text(self, endpoint, resource_id, subresource):
+        self.assertEqual(common.cache_uri_build(endpoint, resource_id, subresource),
+                         '/'.join([endpoint, str(resource_id), subresource, '']))
