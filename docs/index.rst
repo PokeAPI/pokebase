@@ -3,8 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pokebase's documentation!
-====================================
+Documentation for ``pokebase``
+==============================
+The simple but powerful Python interface to the `PokéAPI database <https://pokeapi.co/>`_.
 
 .. toctree::
    :maxdepth: 2
