@@ -8,7 +8,7 @@ The simple but powerful Python interface to the `PokéAPI database <https://poke
    :caption: Contents:
 
    start
-   examples
+   examples/index
    api/index
 
 
