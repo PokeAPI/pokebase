@@ -8,6 +8,9 @@ __pycache__/
 # Python setup.py distributions
 dist/
 
+# Docs build directory
+docs/_build/
+
 # Hypothesis for testing
 .hypothesis/
 
