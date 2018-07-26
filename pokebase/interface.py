@@ -20,7 +20,7 @@ def _make_obj(obj):
     if isinstance(obj, dict):
         if 'url' in obj.keys():
             url = obj['url']
-            id_ = url.split('/')[-2]      # ID of the data.
+            id_ = int(url.split('/')[-2])      # ID of the data.
             endpoint = url.split('/')[-3]  # Where the data is located.
             return APIResource(endpoint, id_, lazy_load=True)
 
