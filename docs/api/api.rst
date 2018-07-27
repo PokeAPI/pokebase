@@ -2,3 +2,4 @@
 ================
 
 .. automodule:: pokebase.api
+   :members:

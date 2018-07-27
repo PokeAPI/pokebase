@@ -7,6 +7,14 @@ from .cache import save, load, save_sprite, load_sprite, get_sprite_path
 
 
 def _call_api(endpoint, resource_id=None, subresource=None):
+    """Retrieve data from PokéAPI.
+
+    :arg endpoint:
+    :arg resource_id:
+    :arg subresource:
+    :returns: the API response content
+    :rtype: dict
+    """
     
     url = api_url_build(endpoint, resource_id, subresource)
 
@@ -32,7 +40,14 @@ def _call_api(endpoint, resource_id=None, subresource=None):
 
 
 def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
+    """Check the cache for data; call the API if it isn't found.
 
+    :arg endpoint:
+    :arg resource_id:
+    :arg subresource:
+    :returns: the requested data
+    :rtype: dict
+    """
     if not kwargs.get('force_lookup', False):
         try:
             data = load(endpoint, resource_id, subresource)
@@ -47,6 +62,9 @@ def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
 
 
 def _call_sprite_api(sprite_type, sprite_id, **kwargs):
+    """Retrieve image data from the sprite API.
+
+    """
 
     url = sprite_url_build(sprite_type, sprite_id, **kwargs)
 
@@ -60,6 +78,13 @@ def _call_sprite_api(sprite_type, sprite_id, **kwargs):
 
 
 def get_sprite(sprite_type, sprite_id, **kwargs):
+    """Check the cache for the sprite; call the API if it isn't found.
+
+    :arg sprite_tpye:
+    :arg sprite_id:
+    :returns: the requested sprite, and the location in the cache
+    :rtype: dict
+    """
 
     if not kwargs.get('force_lookup', False):
         try:
