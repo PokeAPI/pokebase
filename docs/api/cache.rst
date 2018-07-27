@@ -2,3 +2,4 @@
 ==================
 
 .. automodule:: pokebase.cache
+   :members:
