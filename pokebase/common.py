@@ -21,7 +21,17 @@ SPRITE_EXT = 'png'
 
 
 def validate(endpoint, resource_id=None):
+    """Check if *endpoint* and *resource_id* are valid for API calls.
 
+    *endpoint* should come from the list of recognized endpoints, and
+    *resource_id* should be a non-negative integer.
+
+    :arg endpoint: the endpoint to validate
+    :arg resource_id: the resource_id to validate
+    :raises ValueError: if either *endpoint* or *resource_id* are 
+       determined to be invalid
+    :return: :const:`None`
+    """
     if endpoint not in ENDPOINTS:
         raise ValueError('Unknown API endpoint \'{}\''.format(endpoint))
 
@@ -34,7 +44,14 @@ def validate(endpoint, resource_id=None):
 
 
 def api_url_build(endpoint, resource_id=None, subresource=None):
+    """Construct a URL for calling PokéAPI.
 
+    :arg endpoint:
+    :arg resource_id:
+    :arg subresource:
+    :returns: the fully-formed url
+    :rtype: str
+    """
     validate(endpoint, resource_id)
 
     if resource_id is not None:
@@ -47,7 +64,14 @@ def api_url_build(endpoint, resource_id=None, subresource=None):
 
 
 def cache_uri_build(endpoint, resource_id=None, subresource=None):
+    """Construct a URI for saving/loading cached data.
 
+    :arg endpoint:
+    :arg resource_id:
+    :arg subresource:
+    :returns: the fully-formed URI
+    :rtype: str
+    """
     validate(endpoint, resource_id)
 
     if resource_id is not None:
@@ -60,7 +84,13 @@ def cache_uri_build(endpoint, resource_id=None, subresource=None):
 
 
 def sprite_url_build(sprite_type, sprite_id, **kwargs):
+    """Construct a URL for calling the sprite API.
 
+    :arg sprite_type:
+    :arg sprite_id:
+    :returns: the fully-formed URL
+    :rtype: str
+    """
     options = parse_sprite_options(sprite_type, **kwargs)
 
     filename = '.'.join([str(sprite_id), SPRITE_EXT])
@@ -70,8 +100,14 @@ def sprite_url_build(sprite_type, sprite_id, **kwargs):
 
 
 def sprite_filepath_build(sprite_type, sprite_id, **kwargs):
-    """returns the filepath of the sprite *relative to SPRITE_CACHE*"""
+    """Determine the sprite filepath relative to the sprite cache.
 
+    :arg sprite_type:
+    :arg sprite_id:
+    :returns: the sprite filepath, relative to 
+       :obj:`pokebases.cache.SPRITE_CACHE <SPRITE_CACHE>`
+    :rtype: str
+    """
     options = parse_sprite_options(sprite_type, **kwargs)
 
     filename = '.'.join([str(sprite_id), SPRITE_EXT])
@@ -81,6 +117,12 @@ def sprite_filepath_build(sprite_type, sprite_id, **kwargs):
 
 
 def parse_sprite_options(sprite_type, **kwargs):
+    """Correctly order the given sprite options for URLs and filepaths.
+
+    :arg sprite_type:
+    :returns: 
+    :rtype: list
+    """
     options = []
 
     if sprite_type == 'pokemon':
