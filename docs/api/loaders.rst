@@ -2,3 +2,4 @@
 ====================
 
 .. automodule:: pokebase.loaders
+   :members:
