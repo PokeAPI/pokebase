@@ -5,18 +5,17 @@ from .common import BASE_URL, api_url_build, sprite_url_build
 
 
 def _make_obj(obj):
-    """Takes an object and returns a corresponding API class.
+    """Take an object and returns it as a corresponding API class.
 
     The names and values of the data will match exactly with those found
     in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data
     may be of a standard type, such as an integer or string. For those cases,
     the input value is simply returned, unchanged.
 
-    :param obj: the object to be converted
-    :return either the same value, if it does not need to be converted, or a
+    :arg obj: the object to be converted
+    :returns: either the same value, if it does not need to be converted, or a
     APIResource or APIMetadata instance, depending on the data inputted.
     """
-
     if isinstance(obj, dict):
         if 'url' in obj.keys():
             url = obj['url']
@@ -30,7 +29,14 @@ def _make_obj(obj):
 
 
 def name_id_convert(endpoint, name_or_id):
+    """Take an id or a name, and return the completed name/id pair.
 
+    :arg endpoint:
+    :arg name_or_id:
+    :raises ValueError: if the matching name or id can't be found
+    :returns:
+    :rtype: (str, int)
+    """
     if isinstance(name_or_id, int):
         id_ = name_or_id
         name = _convert_id_to_name(endpoint, id_)
@@ -47,6 +53,13 @@ def name_id_convert(endpoint, name_or_id):
 
 
 def _convert_id_to_name(endpoint, id_):
+    """Take an id; return its matching name, it it exists.
+
+    :arg endpoint:
+    :arg id_:
+    :returns:
+    :rtype:
+    """
     resource_data = get_data(endpoint)['results']
 
     for resource in resource_data:
@@ -59,7 +72,13 @@ def _convert_id_to_name(endpoint, id_):
 
 
 def _convert_name_to_id(endpoint, name):
+    """Take a name; return its matching id, if it matches the endpoint.
 
+    :arg endpoint:
+    :arg id_:
+    :returns:
+    :rtype:
+    """
     resource_data = get_data(endpoint)['results']
 
     for resource in resource_data:
@@ -83,7 +102,11 @@ class APIResource(object):
     """
 
     def __init__(self, endpoint, name_or_id, lazy_load=False, force_lookup=False):
+        """Create an interface for an API Resource.
 
+        :arg endpoint:
+        :arg name_or_id:
+        """
         name, id_ = name_id_convert(endpoint, name_or_id)
         url = api_url_build(endpoint, id_)
 
@@ -106,7 +129,6 @@ class APIResource(object):
         for the requested attribute. If it is not found, AttributeError is
         raised.
         """
-
         if not self.__loaded:
             self._load()
             self.__loaded = True
@@ -130,9 +152,8 @@ class APIResource(object):
          Internal function, does not usually need to be called by the user, as
          it is called automatically when an attribute is requested.
 
-        :return None
+        :returns: None
         """
-
         data = get_data(self.endpoint, self.id_, force_lookup=self.__force_lookup)
 
         # Make our custom objects from the data.
@@ -168,15 +189,14 @@ class APIResourceList(object):
 
     You can iterate through all the names or all the urls, using the respective
     properties. You can also iterate on the object itself to run through the
-    `dict`s with names and urls together, whatever floats your boat.
+    dicts with names and urls together, whatever floats your boat.
     """
 
     def __init__(self, endpoint, force_lookup=False):
-        """Creates a new APIResourceList instance.
+        """Create a new APIResourceList instance.
 
-        :param name: the name of the resource to get (ex. 'berry' or 'move')
+        :arg endpoint: the name of the endpoint to get (ex. 'berry' or 'move')
         """
-
         response = get_data(endpoint, force_lookup=force_lookup)
 
         self.name = endpoint
@@ -216,7 +236,10 @@ class APIMetadata(object):
     """
 
     def __init__(self, data):
+        """Intialize a new APIMetadata object.
 
+        :arg data:
+        """
         for key, val in data.items():
 
             if isinstance(val, dict):
@@ -231,6 +254,11 @@ class APIMetadata(object):
 class SpriteResource(object):
 
     def __init__(self, sprite_type, sprite_id, **kwargs):
+        """Initialize a new SpriteResource object.
+
+        :arg sprite_type:
+        :arg sprite_id:
+        """
 
         url = sprite_url_build(sprite_type, sprite_id, **kwargs)
 
@@ -260,7 +288,6 @@ class SpriteResource(object):
         for the requested attribute. If it is not found, AttributeError is
         raised.
         """
-
         if not self.__loaded:
             self._load()
             self.__loaded = True

@@ -2,4 +2,4 @@
 ======================
 
 .. automodule:: pokebase.interface
-
+   :members:
