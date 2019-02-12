@@ -1,5 +1,5 @@
 ======
-Pokebase
+Pokebase |swampert|
 ======
 
 |travis| |pypi|
@@ -95,6 +95,9 @@ Do this :)
 
 >>> from pokebase import cache
 >>> cache.API_CACHE
+
+.. |swampert| image::  https://veekun.com/dex/media/pokemon/main-sprites/heartgold-soulsilver/260.png
+   :target: https://veekun.com/dex/media/pokemon/main-sprites/heartgold-soulsilver/260.png
 
 .. |travis| image::  https://travis-ci.org/PokeAPI/pokebase.svg?branch=master
    :target: https://travis-ci.org/PokeAPI/pokebase
