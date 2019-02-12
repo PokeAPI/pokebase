@@ -1,5 +1,5 @@
 ======
-README
+Pokebase
 ======
 
 |travis| |pypi|
@@ -7,8 +7,10 @@ README
 pokebase is a simple but powerful Python interface to the
 `PokéAPI database <https://pokeapi.co/>`_
 
+Maintainer: `GregHilmes <https://github.com/GregHilmes>`_
+
 =========
-IMPORTANT
+Important
 =========
 pokebase is under heavy construction right now, in order to clean up the code
 and make it easier to maintain. I have also dropped support for Python 2.7, *for
@@ -94,8 +96,8 @@ Do this :)
 >>> from pokebase import cache
 >>> cache.API_CACHE
 
-.. |travis| image:: https://travis-ci.org/GregHilmes/pokebase.svg?branch=master
-   :target: https://travis-ci.org/GregHilmes/pokebase
+.. |travis| image::  https://travis-ci.org/PokeAPI/pokebase.svg?branch=master
+   :target: https://travis-ci.org/PokeAPI/pokebase
 
 .. |pypi| image:: https://img.shields.io/badge/pypi-1.2.0-blue.svg
    :target: https://pypi.python.org/pypi/pokebase
