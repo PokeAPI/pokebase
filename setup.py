@@ -1,4 +1,4 @@
-from distutils.core import setup
+import setuptools
 
 
 def readme_text():
@@ -6,7 +6,7 @@ def readme_text():
         return f.read()
 
 
-setup(
+setuptools.setup(
     name='pokebase',
     packages=['pokebase'],
     version='1.3.0',
