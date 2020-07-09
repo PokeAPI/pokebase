@@ -1,4 +1,4 @@
-from distutils.core import setup
+import setuptools
 
 
 def readme_text():
@@ -6,15 +6,15 @@ def readme_text():
         return f.read()
 
 
-setup(
+setuptools.setup(
     name='pokebase',
     packages=['pokebase'],
-    version='1.2.0',
+    version='1.3.0',
     description='A Python wrapper for the friendly PokeAPI database',
     long_description=readme_text(),
     author='Greg Hilmes',
     author_email='99hilmes.g@gmail.com',
-    url='https://github.com/GregHilmes/pokebase',
+    url='https://github.com/PokeAPI/pokebase',
     keywords=['database', 'pokemon', 'wrapper'],
     install_requires=['requests'],
     license='BSD License',

@@ -1,6 +1,6 @@
-======
+===================
 Pokebase |swampert|
-======
+===================
 
 |travis| |pypi|
 
@@ -13,16 +13,9 @@ Maintainer: `GregHilmes <https://github.com/GregHilmes>`_
 Important
 =========
 pokebase is under heavy construction right now, in order to clean up the code
-and make it easier to maintain. I have also dropped support for Python 2.7, *for
-the time being*. Hopefully this can be added in later. I recommend you continue using
-version 1.2.0, download via ``pip``. Once I deem these new changes stable, I'll do another
-PyPI release (with fancy new ``shelve`` caching!)
-
-Planned To-do's for the current construction:
-
- * APISubresource access
- * complete rewrite of the docstrings, and hosting on `readthdocs.io <https://readthedocs.org/>`_
- * Python 2.7 support
+and make it easier to maintain.  I recommend you continue using
+version 1.3.0, download via ``pip``. Once these new changes are stable, there will be another
+PyPI release.
 
 Installation
 ============
@@ -30,6 +23,10 @@ Installation
 ``pip install pokebase``
 
 It can't get much easier than that.
+
+Pokebase has been tested against Python 3.6 and Python 3.6 only. If this is too
+old for your needs, see the above note about the construction. Pokebase may
+function under other version of Python, but bugs may occur.
 
 Usage
 =====
@@ -102,5 +99,5 @@ Do this :)
 .. |travis| image::  https://travis-ci.org/PokeAPI/pokebase.svg?branch=master
    :target: https://travis-ci.org/PokeAPI/pokebase
 
-.. |pypi| image:: https://img.shields.io/badge/pypi-1.2.0-blue.svg
+.. |pypi| image:: https://img.shields.io/badge/pypi-1.3.0-blue.svg
    :target: https://pypi.python.org/pypi/pokebase
