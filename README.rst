@@ -24,6 +24,10 @@ Installation
 
 It can't get much easier than that.
 
+Pokebase has been tested against Python 3.6 and Python 3.6 only. If this is too
+old for your needs, see the above note about the construction. Pokebase may
+function under other version of Python, but bugs may occur.
+
 Usage
 =====
 
