@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch
 
 from hypothesis import given
-from hypothesis.strategies import dictionaries, text, sampled_from, integers, lists
+from hypothesis.strategies import dictionaries, integers, lists, sampled_from, text
 
 from pokebase import interface
 from pokebase.cache import set_cache
@@ -43,7 +43,7 @@ class TestFunction__make_obj(unittest.TestCase):
 
 
 class TestFunction__convert_id_to_name(unittest.TestCase):
-    
+
     # _convert_id_to_name(endpoint, id_)
 
     def setUp(self):
@@ -54,7 +54,7 @@ class TestFunction__convert_id_to_name(unittest.TestCase):
            id_=integers(min_value=1))
     @patch('pokebase.interface.get_data')
     def testArgs(self, mock_get_data, name, endpoint, id_):
-        
+
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
         self.assertEqual(name, interface._convert_id_to_name(endpoint, id_))
@@ -74,13 +74,13 @@ class TestFunction__convert_id_to_name(unittest.TestCase):
     def testArg_endpoint_Text(self, mock_get_data, endpoint, id_):
 
         mock_get_data.side_effect = ValueError()
-        
+
         with self.assertRaises(ValueError):
             interface._convert_id_to_name(endpoint, id_)
 
 
 class TestFunction__convert_name_to_id(unittest.TestCase):
-    
+
     # _convert_name_to_id(endpoint, name)
     @given(id_=integers(min_value=1),
            endpoint=sampled_from(ENDPOINTS),
@@ -98,7 +98,7 @@ class TestFunction__convert_name_to_id(unittest.TestCase):
     def testArg_endpoint_Text(self, mock_get_data, endpoint, name):
 
         mock_get_data.side_effect = ValueError()
-        
+
         with self.assertRaises(ValueError):
             interface._convert_id_to_name(endpoint, name)
 
@@ -122,7 +122,7 @@ class TestFunction_name_id_convert(unittest.TestCase):
            name=text())
     @patch('pokebase.interface.get_data')
     def testArgs_WithName(self, mock_get_data, id_, endpoint, name):
-        
+
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
         self.assertEqual((name, id_), interface.name_id_convert(endpoint, id_))
@@ -133,13 +133,13 @@ class TestFunction_name_id_convert(unittest.TestCase):
     def testArg_endpoint_Text(self, mock_get_data, endpoint, name):
 
         mock_get_data.side_effect = ValueError()
-        
+
         with self.assertRaises(ValueError):
             interface.name_id_convert(endpoint, name)
 
 
 class TestClass_APIResource(unittest.TestCase):
-    
+
     # APIResource(endpoint, name_or_id, lazy_load=True)
 
     def setUp(self):
@@ -153,7 +153,7 @@ class TestClass_APIResource(unittest.TestCase):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
-        self.assertIsInstance(interface.APIResource(endpoint, name), 
+        self.assertIsInstance(interface.APIResource(endpoint, name),
                               interface.APIResource)
 
     @given(name=text(),
@@ -164,7 +164,7 @@ class TestClass_APIResource(unittest.TestCase):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_), 'name': name}]}
 
-        self.assertIsInstance(interface.APIResource(endpoint, id_), 
+        self.assertIsInstance(interface.APIResource(endpoint, id_),
                               interface.APIResource)
 
     @given(id_=integers(min_value=1),
@@ -240,7 +240,7 @@ class TestClass_APIResource(unittest.TestCase):
 
 
 class TestClass_APIResourceList(unittest.TestCase):
-    
+
     @given(endpoint=sampled_from(ENDPOINTS))
     @patch('pokebase.interface.get_data')
     def testArgs(self, mock_get_data, endpoint):
@@ -249,7 +249,7 @@ class TestClass_APIResourceList(unittest.TestCase):
 
         self.assertIsInstance(interface.APIResourceList(endpoint),
                               interface.APIResourceList)
-    
+
     @given(endpoint=text())
     @patch('pokebase.interface.get_data')
     def testArg_endpoint_Text(self, mock_get_data, endpoint):

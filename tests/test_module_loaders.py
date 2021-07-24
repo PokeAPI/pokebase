@@ -6,7 +6,7 @@ from unittest.mock import patch
 from hypothesis import given
 from hypothesis.strategies import integers
 
-from pokebase import loaders, APIResource
+from pokebase import APIResource, loaders
 from pokebase.common import ENDPOINTS
 
 

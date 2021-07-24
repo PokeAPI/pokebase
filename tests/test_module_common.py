@@ -3,13 +3,13 @@
 import unittest
 
 from hypothesis import given
-from hypothesis.strategies import sampled_from, none, text, integers
+from hypothesis.strategies import integers, none, sampled_from, text
 
 from pokebase import common
 
 
 class TestFunction_validate(unittest.TestCase):
- 
+
     @given(endpoint=sampled_from(common.ENDPOINTS),
            resource_id=none())
     def testArg_endpoint_Sampled(self, endpoint, resource_id):
