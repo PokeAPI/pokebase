@@ -93,14 +93,14 @@ class APIResource(object):
         self.__loaded = False
         self.__force_lookup = force_lookup
 
-        if not lazy_load:
-            self._load()
-            self.__loaded = True
-
         if custom:
             self._custom = custom
         else:
             self._custom = {}
+
+        if not lazy_load:
+            self._load()
+            self.__loaded = True
 
     def __getattr__(self, attr):
         """Modified method to auto-load the data when it is needed.
@@ -139,14 +139,8 @@ class APIResource(object):
 
         # Make our custom objects from the data.
         for key, val in data.items():
-
-            if key == "location_area_encounters" and self.endpoint == "pokemon":
-
-                params = val.split("/")[-3:]
-                ep, id_, subr = params
-                encounters = get_data(ep, int(id_), subr)
-                data[key] = [_make_obj(enc) for enc in encounters]
-                continue
+            if key in self._custom:
+                val = get_data(*self._custom[key](val))
 
             if isinstance(val, dict):
                 data[key] = _make_obj(val)
