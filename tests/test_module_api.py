@@ -4,8 +4,8 @@ import shelve
 import unittest
 from unittest.mock import patch
 
-from hypothesis import given
-from hypothesis.strategies import text, sampled_from, integers, none, assume, dictionaries
+from hypothesis import given, assume
+from hypothesis.strategies import text, sampled_from, integers, none, dictionaries
 from requests.exceptions import HTTPError
 
 from pokebase import api

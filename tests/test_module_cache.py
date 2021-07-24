@@ -5,8 +5,8 @@ import shelve
 import os
 import unittest
 
-from hypothesis import given
-from hypothesis.strategies import sampled_from, integers, dictionaries, text, assume, characters
+from hypothesis import given, assume
+from hypothesis.strategies import sampled_from, integers, dictionaries, text, characters
 
 from pokebase import cache
 from pokebase.common import ENDPOINTS
