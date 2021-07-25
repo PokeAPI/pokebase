@@ -30,7 +30,6 @@ def _make_obj(obj):
 
 
 def name_id_convert(endpoint, name_or_id):
-
     if isinstance(name_or_id, int):
         id_ = name_or_id
         name = _convert_id_to_name(endpoint, id_)
@@ -51,14 +50,13 @@ def _convert_id_to_name(endpoint, id_):
     for resource in resource_data:
         if resource["url"].split("/")[-2] == str(id_):
 
-            # Return the matching name, or None if it doesn't exsist.
-            return resource.get("name", None)
+            # Return the matching name, or id_ if it doesn't exsist.
+            return resource.get("name", str(id_))
 
     return None
 
 
 def _convert_name_to_id(endpoint, name):
-
     resource_data = get_data(endpoint)["results"]
 
     for resource in resource_data:
@@ -241,7 +239,6 @@ class SpriteResource(object):
             self.__loaded = True
 
     def _load(self):
-
         data = get_sprite(self.sprite_type, self.sprite_id, **self.__orginal_kwargs)
         self.__dict__.update(data)
 
