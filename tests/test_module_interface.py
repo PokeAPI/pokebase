@@ -9,6 +9,7 @@ from hypothesis.strategies import dictionaries, integers, lists, sampled_from, t
 from pokebase import interface
 from pokebase.cache import set_cache
 from pokebase.common import ENDPOINTS
+from pokebase.loaders import pokemon
 
 
 class TestFunction__make_obj(unittest.TestCase):
@@ -66,7 +67,7 @@ class TestFunction__convert_id_to_name(unittest.TestCase):
 
         mock_get_data.return_value = {'count': 1, 'results': [{'url': 'mocked.url/api/v2/{}/{}/'.format(endpoint, id_)}]}
 
-        self.assertIsNone(interface._convert_id_to_name(endpoint, id_))
+        self.assertEqual(str(id_), interface._convert_id_to_name(endpoint, id_))
 
     @given(endpoint=text(),
            id_=integers(min_value=1))
@@ -232,7 +233,7 @@ class TestClass_APIResource(unittest.TestCase):
                                      {'location_area_encounters': '/api/v2/pokemon/{}/encounters'.format(id_)},
                                      [{'version_details': [], 'location_area': {'url': 'mocked.url/api/v2/location-area/1/', 'name': 'mocked location_area'}}],
                                      {'count': 1, 'results': [{'url': 'mocked.url/api/v2/location-area/1/', 'name': 'mocked name'}]}]
-        pkmn = interface.APIResource('pokemon', id_)
+        pkmn = pokemon(id_)
         # Should be list or empty list
         self.assertIsInstance(pkmn.location_area_encounters, list)
         # would be str if it was not handled

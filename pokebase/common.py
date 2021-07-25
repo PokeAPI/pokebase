@@ -118,10 +118,12 @@ def parse_sprite_options(sprite_type, **kwargs):
     if sprite_type == "pokemon":
         if kwargs.get("model", False):
             options.append("model")
-        elif kwargs.get("other_sprites", False):
-            options.append("other-sprites")
+        elif kwargs.get("other", False):
+            options.append("other")
             if kwargs.get("official_artwork", False):
                 options.append("official-artwork")
+            if kwargs.get("dream_world", False):
+                options.append("dream-world")
         else:
             if kwargs.get("back", False):
                 options.append("back")
