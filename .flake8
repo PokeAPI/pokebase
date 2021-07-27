@@ -1,0 +1,4 @@
+[flake8]
+max-line-length=119
+exclude=.venv,__pycache__,venv,.direnv,tests/
+ignore=F405,F403,S403,S301
