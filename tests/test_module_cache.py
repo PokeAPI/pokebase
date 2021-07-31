@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import importlib
-import shelve
 import os
+import shelve
 import unittest
 
-from hypothesis import given
-from hypothesis.strategies import sampled_from, integers, dictionaries, text, assume, characters
+from hypothesis import assume, given
+from hypothesis.strategies import characters, dictionaries, integers, sampled_from, text
 
 from pokebase import cache
 from pokebase.common import ENDPOINTS
 
 
 class TestFunction_save(unittest.TestCase):
-    
+
     # cache.save(data, endpoint, resource_id=None)
 
     def setUp(self):
@@ -73,7 +73,7 @@ class TestFunction_save(unittest.TestCase):
 
 
 class TestFunction_load(unittest.TestCase):
-    
+
     # cache.load(endpoint, resource_id=None)
 
     def setUp(self):
@@ -140,9 +140,9 @@ class TestFunction_load(unittest.TestCase):
 
 
 class TestFunction_set_cache(unittest.TestCase):
-    
+
     # cache.set_cache(new_path=None)
-    
+
     default_home = os.path.join(os.path.expanduser('~'), '.cache')
 
     def testAttr_Caches_Import(self):
@@ -170,7 +170,7 @@ class TestFunction_set_cache(unittest.TestCase):
         os.rmdir(cache.SPRITE_CACHE)
         if os.path.exists(cache.API_CACHE): os.remove(cache.API_CACHE)
         os.rmdir(cache.CACHE_DIR)
-        self.assertEqual(cache.set_cache(), 
+        self.assertEqual(cache.set_cache(),
                          (cache.CACHE_DIR, cache.API_CACHE, cache.SPRITE_CACHE))
 
     @given(new_path=characters(whitelist_categories=['Lu', 'Ll', 'Nd']))

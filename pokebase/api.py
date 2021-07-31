@@ -2,12 +2,11 @@
 
 import requests
 
-from .common import BASE_URL, ENDPOINTS, api_url_build, sprite_url_build
-from .cache import save, load, save_sprite, load_sprite, get_sprite_path
+from .cache import get_sprite_path, load, load_sprite, save, save_sprite
+from .common import api_url_build, sprite_url_build
 
 
 def _call_api(endpoint, resource_id=None, subresource=None):
-    
     url = api_url_build(endpoint, resource_id, subresource)
 
     # Get a list of resources at the endpoint, if no resource_id is given.
@@ -18,9 +17,9 @@ def _call_api(endpoint, resource_id=None, subresource=None):
 
     data = response.json()
 
-    if get_endpoint_list and data['count'] != len(data['results']):
+    if get_endpoint_list and data["count"] != len(data["results"]):
         # We got a section of all results; we want ALL of them.
-        items = data['count']
+        items = data["count"]
         num_items = dict(limit=items)
 
         response = requests.get(url, params=num_items)
@@ -32,8 +31,7 @@ def _call_api(endpoint, resource_id=None, subresource=None):
 
 
 def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
-
-    if not kwargs.get('force_lookup', False):
+    if not kwargs.get("force_lookup", False):
         try:
             data = load(endpoint, resource_id, subresource)
             return data
@@ -47,7 +45,6 @@ def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
 
 
 def _call_sprite_api(sprite_type, sprite_id, **kwargs):
-
     url = sprite_url_build(sprite_type, sprite_id, **kwargs)
 
     response = requests.get(url)
@@ -60,8 +57,7 @@ def _call_sprite_api(sprite_type, sprite_id, **kwargs):
 
 
 def get_sprite(sprite_type, sprite_id, **kwargs):
-
-    if not kwargs.get('force_lookup', False):
+    if not kwargs.get("force_lookup", False):
         try:
             data = load_sprite(sprite_type, sprite_id, **kwargs)
             return data

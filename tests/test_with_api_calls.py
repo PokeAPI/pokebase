@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from os import environ
 import unittest
+from os import environ
 
 import pokebase as pb
 
+
 @unittest.skipIf(environ.get('MOCK_ONLY', False), 'only running mock API calls')
 class TestAPICalls(unittest.TestCase):
-    
+
     def testFunction__call_api(self):
         self.assertIsInstance(pb.api._call_api('berry', 1),
                               dict)

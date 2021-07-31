@@ -4,14 +4,13 @@ import shelve
 import unittest
 from unittest.mock import patch
 
-from hypothesis import given
-from hypothesis.strategies import text, sampled_from, integers, none, assume, dictionaries
+from hypothesis import assume, given
+from hypothesis.strategies import dictionaries, integers, none, sampled_from, text
 from requests.exceptions import HTTPError
 
-from pokebase import api
+from pokebase import api, cache
+from pokebase.cache import save, set_cache
 from pokebase.common import ENDPOINTS, cache_uri_build
-from pokebase import cache
-from pokebase.cache import set_cache, save
 
 
 class TestFunction__call_api(unittest.TestCase):

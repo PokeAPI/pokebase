@@ -1,8 +1,8 @@
-attrs==18.1.0
-certifi==2020.6.20
-chardet==3.0.4
-idna==2.10
-requests==2.24.0
-urllib3==1.25.9
-coverage==4.5.1
-hypothesis==3.66.0
+attrs==21.2.0
+certifi==2021.5.30
+chardet==4.0.0
+idna==3.2
+requests==2.26.0
+urllib3==1.26.6
+coverage==5.5
+hypothesis==6.14.3

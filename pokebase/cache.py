@@ -13,11 +13,11 @@ SPRITE_CACHE = None
 
 def save(data, endpoint, resource_id=None, subresource=None):
 
-    if data == dict():    # No point in saving empty data.
+    if data == dict():  # No point in saving empty data.
         return None
 
     if not isinstance(data, (dict, list)):
-        raise ValueError('Could not save non-dict data')
+        raise ValueError("Could not save non-dict data")
 
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
@@ -36,14 +36,14 @@ def save(data, endpoint, resource_id=None, subresource=None):
 
 def save_sprite(data, sprite_type, sprite_id, **kwargs):
 
-    abs_path = data['path']
+    abs_path = data["path"]
 
     # Make intermediate directories; this line removes the file+extension.
     dirs = abs_path.rpartition(os.path.sep)[0]
     safe_make_dirs(dirs)
 
-    with open(abs_path, 'wb') as img_file:
-        img_file.write(data['img_data'])
+    with open(abs_path, "wb") as img_file:
+        img_file.write(data["img_data"])
 
     return None
 
@@ -59,7 +59,7 @@ def load(endpoint, resource_id=None, subresource=None):
         if error.errno == 11:
             # Cache open by another person/program
             # print('Cache unavailable, skipping load')
-            raise KeyError('Cache could not be opened.')
+            raise KeyError("Cache could not be opened.")
         else:
             raise
 
@@ -67,7 +67,7 @@ def load(endpoint, resource_id=None, subresource=None):
 def load_sprite(sprite_type, sprite_id, **kwargs):
     abs_path = get_sprite_path(sprite_type, sprite_id, **kwargs)
 
-    with open(abs_path, 'rb') as img_file:
+    with open(abs_path, "rb") as img_file:
         img_data = img_file.read()
 
     return dict(img_data=img_data, path=abs_path)
@@ -101,10 +101,11 @@ def get_default_cache():
     :return: the default cache directory absolute path
     """
 
-    xdg_cache_home = os.environ.get('XDG_CACHE_HOME') or \
-        os.path.join(os.path.expanduser('~'), '.cache')
+    xdg_cache_home = os.environ.get("XDG_CACHE_HOME") or os.path.join(
+        os.path.expanduser("~"), ".cache"
+    )
 
-    return os.path.join(xdg_cache_home, 'pokebase')
+    return os.path.join(xdg_cache_home, "pokebase")
 
 
 def get_sprite_path(sprite_type, sprite_id, **kwargs):
@@ -136,8 +137,8 @@ def set_cache(new_path=None):
         new_path = get_default_cache()
 
     CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
-    API_CACHE = os.path.join(CACHE_DIR, 'api.cache')
-    SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, 'sprite'))
+    API_CACHE = os.path.join(CACHE_DIR, "api.cache")
+    SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, "sprite"))
 
     return CACHE_DIR, API_CACHE, SPRITE_CACHE
 
