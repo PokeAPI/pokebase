@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .api import get_data, get_sprite
-from .common import BASE_URL, api_url_build, sprite_url_build
+from .common import api_url_build, sprite_url_build
 
 
 def _make_obj(obj):
@@ -18,10 +18,10 @@ def _make_obj(obj):
     """
 
     if isinstance(obj, dict):
-        if 'url' in obj.keys():
-            url = obj['url']
-            id_ = int(url.split('/')[-2])      # ID of the data.
-            endpoint = url.split('/')[-3]  # Where the data is located.
+        if "url" in obj.keys():
+            url = obj["url"]
+            id_ = int(url.split("/")[-2])  # ID of the data.
+            endpoint = url.split("/")[-3]  # Where the data is located.
             return APIResource(endpoint, id_, lazy_load=True)
 
         return APIMetadata(obj)
@@ -30,7 +30,6 @@ def _make_obj(obj):
 
 
 def name_id_convert(endpoint, name_or_id):
-
     if isinstance(name_or_id, int):
         id_ = name_or_id
         name = _convert_id_to_name(endpoint, id_)
@@ -40,31 +39,29 @@ def name_id_convert(endpoint, name_or_id):
         id_ = _convert_name_to_id(endpoint, name)
 
     else:
-        raise ValueError('the name or id \'{}\' could not be converted'
-                         .format(name_or_id))
+        raise ValueError(f"the name or id '{name_or_id}' could not be converted")
 
     return name, id_
 
 
 def _convert_id_to_name(endpoint, id_):
-    resource_data = get_data(endpoint)['results']
+    resource_data = get_data(endpoint)["results"]
 
     for resource in resource_data:
-        if resource['url'].split('/')[-2] == str(id_):
+        if resource["url"].split("/")[-2] == str(id_):
 
-            # Return the matching name, or None if it doesn't exsist.
-            return resource.get('name', None)
+            # Return the matching name, or id_ if it doesn't exsist.
+            return resource.get("name", str(id_))
 
     return None
 
 
 def _convert_name_to_id(endpoint, name):
-
-    resource_data = get_data(endpoint)['results']
+    resource_data = get_data(endpoint)["results"]
 
     for resource in resource_data:
-        if resource.get('name') == name:
-            return int(resource.get('url').split('/')[-2])
+        if resource.get("name") == name:
+            return int(resource.get("url").split("/")[-2])
 
     return None
 
@@ -82,18 +79,22 @@ class APIResource(object):
     but not identical.
     """
 
-    def __init__(self, endpoint, name_or_id, lazy_load=False, force_lookup=False):
+    def __init__(
+        self, endpoint, name_or_id, lazy_load=False, force_lookup=False, custom=None
+    ):
 
         name, id_ = name_id_convert(endpoint, name_or_id)
         url = api_url_build(endpoint, id_)
 
-        self.__dict__.update({'name': name,
-                              'endpoint': endpoint,
-                              'id_': id_,
-                              'url': url})
+        self.__dict__.update({"name": name, "endpoint": endpoint, "id_": id_, "url": url})
 
         self.__loaded = False
         self.__force_lookup = force_lookup
+
+        if custom:
+            self._custom = custom
+        else:
+            self._custom = {}
 
         if not lazy_load:
             self._load()
@@ -114,14 +115,13 @@ class APIResource(object):
             return self.__getattribute__(attr)
 
         else:
-            raise AttributeError('{} object has no attribute {}'
-                                 .format(type(self), attr))
+            raise AttributeError(f"{type(self)} object has no attribute {attr}")
 
     def __str__(self):
         return str(self.name)
 
     def __repr__(self):
-        return '<{}-{}>'.format(self.endpoint, self.name)
+        return f"<{self.endpoint}-{self.name}>"
 
     def _load(self):
         """Function to collect reference data and connect it to the instance as
@@ -137,15 +137,8 @@ class APIResource(object):
 
         # Make our custom objects from the data.
         for key, val in data.items():
-
-            if key == 'location_area_encounters' \
-                    and self.endpoint == 'pokemon':
-
-                params = val.split('/')[-3:]
-                ep, id_, subr = params
-                encounters = get_data(ep, int(id_), subr)
-                data[key] = [_make_obj(enc) for enc in encounters]
-                continue
+            if key in self._custom:
+                val = get_data(*self._custom[key](val))
 
             if isinstance(val, dict):
                 data[key] = _make_obj(val)
@@ -180,8 +173,8 @@ class APIResourceList(object):
         response = get_data(endpoint, force_lookup=force_lookup)
 
         self.name = endpoint
-        self.__results = [i for i in response['results']]
-        self.count = response['count']
+        self.__results = [i for i in response["results"]]
+        self.count = response["count"]
 
     def __len__(self):
         return self.count
@@ -196,13 +189,13 @@ class APIResourceList(object):
     def names(self):
         """Useful iterator for all the resource's names."""
         for result in self.__results:
-            yield result.get('name', result['url'].split('/')[-2])
+            yield result.get("name", result["url"].split("/")[-2])
 
     @property
     def urls(self):
         """Useful iterator for all of the resource's urls."""
         for result in self.__results:
-            yield result['url']
+            yield result["url"]
 
 
 class APIMetadata(object):
@@ -229,25 +222,23 @@ class APIMetadata(object):
 
 
 class SpriteResource(object):
-
     def __init__(self, sprite_type, sprite_id, **kwargs):
 
         url = sprite_url_build(sprite_type, sprite_id, **kwargs)
 
-        self.__dict__.update({'sprite_id': sprite_id,
-                              'sprite_type': sprite_type,
-                              'url': url})
+        self.__dict__.update(
+            {"sprite_id": sprite_id, "sprite_type": sprite_type, "url": url}
+        )
 
         self.__loaded = False
-        self.__force_lookup = kwargs.get('force_lookup', False)
+        self.__force_lookup = kwargs.get("force_lookup", False)
         self.__orginal_kwargs = kwargs
 
-        if not kwargs.get('lazy_load', False):
+        if not kwargs.get("lazy_load", False):
             self._load()
             self.__loaded = True
 
     def _load(self):
-
         data = get_sprite(self.sprite_type, self.sprite_id, **self.__orginal_kwargs)
         self.__dict__.update(data)
 
@@ -268,5 +259,4 @@ class SpriteResource(object):
             return self.__getattribute__(attr)
 
         else:
-            raise AttributeError('{} object has no attribute {}'
-                                 .format(type(self), attr))
+            raise AttributeError(f"{type(self)} object has no attribute {attr}")

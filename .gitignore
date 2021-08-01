@@ -1,5 +1,7 @@
 #  Virtual Environment
 .venv/
+.envrc
+.direnv/
 
 # Python file caches
 __pycache__/

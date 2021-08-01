@@ -12,7 +12,8 @@ def berry(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('berry', id_or_name, **kwargs)
+    return APIResource("berry", id_or_name, **kwargs)
+
 
 def berry_firmness(id_or_name, **kwargs):
     """Quick berry-firmness lookup.
@@ -23,7 +24,8 @@ def berry_firmness(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('berry-firmness', id_or_name, **kwargs)
+    return APIResource("berry-firmness", id_or_name, **kwargs)
+
 
 def berry_flavor(id_or_name, **kwargs):
     """Quick berry-flavor lookup.
@@ -34,7 +36,8 @@ def berry_flavor(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('berry-flavor', id_or_name, **kwargs)
+    return APIResource("berry-flavor", id_or_name, **kwargs)
+
 
 def contest_type(id_or_name, **kwargs):
     """Quick contest-type lookup.
@@ -45,7 +48,8 @@ def contest_type(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('contest-type', id_or_name, **kwargs)
+    return APIResource("contest-type", id_or_name, **kwargs)
+
 
 def contest_effect(id_, **kwargs):
     """Quick contest-effect lookup.
@@ -56,7 +60,8 @@ def contest_effect(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('contest-effect', id_, **kwargs)
+    return APIResource("contest-effect", id_, **kwargs)
+
 
 def super_contest_effect(id_, **kwargs):
     """Quick super-contest-effect lookup.
@@ -67,7 +72,8 @@ def super_contest_effect(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('super-contest-effect', id_, **kwargs)
+    return APIResource("super-contest-effect", id_, **kwargs)
+
 
 def encounter_method(id_or_name, **kwargs):
     """Quick encounter-method lookup.
@@ -78,7 +84,8 @@ def encounter_method(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('encounter-method', id_or_name, **kwargs)
+    return APIResource("encounter-method", id_or_name, **kwargs)
+
 
 def encounter_condition(id_or_name, **kwargs):
     """Quick encounter-condition lookup.
@@ -89,7 +96,8 @@ def encounter_condition(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('encounter-condition', id_or_name, **kwargs)
+    return APIResource("encounter-condition", id_or_name, **kwargs)
+
 
 def encounter_condition_value(id_or_name, **kwargs):
     """Quick encounter-condition-value lookup.
@@ -100,7 +108,8 @@ def encounter_condition_value(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('encounter-condition-value', id_or_name, **kwargs)
+    return APIResource("encounter-condition-value", id_or_name, **kwargs)
+
 
 def evolution_chain(id_, **kwargs):
     """Quick evolution-chain lookup.
@@ -111,7 +120,8 @@ def evolution_chain(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('evolution-chain', id_, **kwargs)
+    return APIResource("evolution-chain", id_, **kwargs)
+
 
 def evolution_trigger(id_or_name, **kwargs):
     """Quick evolution-trigger lookup.
@@ -122,7 +132,8 @@ def evolution_trigger(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('evolution-trigger', id_or_name, **kwargs)
+    return APIResource("evolution-trigger", id_or_name, **kwargs)
+
 
 def generation(id_or_name, **kwargs):
     """Quick generation lookup.
@@ -133,7 +144,8 @@ def generation(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('generation', id_or_name, **kwargs)
+    return APIResource("generation", id_or_name, **kwargs)
+
 
 def pokedex(id_or_name, **kwargs):
     """Quick pokedex lookup.
@@ -144,7 +156,8 @@ def pokedex(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pokedex', id_or_name, **kwargs)
+    return APIResource("pokedex", id_or_name, **kwargs)
+
 
 def version(id_or_name, **kwargs):
     """Quick version lookup.
@@ -155,7 +168,8 @@ def version(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('version', id_or_name, **kwargs)
+    return APIResource("version", id_or_name, **kwargs)
+
 
 def version_group(id_or_name, **kwargs):
     """Quick version-group lookup.
@@ -166,7 +180,8 @@ def version_group(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('version-group', id_or_name, **kwargs)
+    return APIResource("version-group", id_or_name, **kwargs)
+
 
 def item(id_or_name, **kwargs):
     """Quick item lookup.
@@ -177,7 +192,8 @@ def item(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('item', id_or_name, **kwargs)
+    return APIResource("item", id_or_name, **kwargs)
+
 
 def item_attribute(id_or_name, **kwargs):
     """Quick item-attribute lookup.
@@ -188,7 +204,8 @@ def item_attribute(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('item-attribute', id_or_name, **kwargs)
+    return APIResource("item-attribute", id_or_name, **kwargs)
+
 
 def item_category(id_or_name, **kwargs):
     """Quick item-category lookup.
@@ -199,7 +216,8 @@ def item_category(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('item-category', id_or_name, **kwargs)
+    return APIResource("item-category", id_or_name, **kwargs)
+
 
 def item_fling_effect(id_or_name, **kwargs):
     """Quick item-fling-effect lookup.
@@ -210,7 +228,8 @@ def item_fling_effect(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('item-fling-effect', id_or_name, **kwargs)
+    return APIResource("item-fling-effect", id_or_name, **kwargs)
+
 
 def item_pocket(id_or_name, **kwargs):
     """Quick item-pocket lookup.
@@ -221,7 +240,8 @@ def item_pocket(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('item-pocket', id_or_name, **kwargs)
+    return APIResource("item-pocket", id_or_name, **kwargs)
+
 
 def machine(id_, **kwargs):
     """Quick machine lookup.
@@ -232,7 +252,8 @@ def machine(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('machine', id_, **kwargs)
+    return APIResource("machine", id_, **kwargs)
+
 
 def move(id_or_name, **kwargs):
     """Quick move lookup.
@@ -243,7 +264,8 @@ def move(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('move', id_or_name, **kwargs)
+    return APIResource("move", id_or_name, **kwargs)
+
 
 def move_ailment(id_or_name, **kwargs):
     """Quick move-ailment lookup.
@@ -254,7 +276,8 @@ def move_ailment(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('move-ailment', id_or_name, **kwargs)
+    return APIResource("move-ailment", id_or_name, **kwargs)
+
 
 def move_battle_style(id_or_name, **kwargs):
     """Quick move-battle-style lookup.
@@ -265,7 +288,8 @@ def move_battle_style(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('move-battle-style', id_or_name, **kwargs)
+    return APIResource("move-battle-style", id_or_name, **kwargs)
+
 
 def move_category(id_or_name, **kwargs):
     """Quick move-category lookup.
@@ -276,7 +300,8 @@ def move_category(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('move-category', id_or_name, **kwargs)
+    return APIResource("move-category", id_or_name, **kwargs)
+
 
 def move_damage_class(id_or_name, **kwargs):
     """Quick move-damage-class lookup.
@@ -287,7 +312,8 @@ def move_damage_class(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('move-damage-class', id_or_name, **kwargs)
+    return APIResource("move-damage-class", id_or_name, **kwargs)
+
 
 def move_learn_method(id_or_name, **kwargs):
     """Quick move-learn-method lookup.
@@ -298,7 +324,8 @@ def move_learn_method(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('move-learn-method', id_or_name, **kwargs)
+    return APIResource("move-learn-method", id_or_name, **kwargs)
+
 
 def move_target(id_or_name, **kwargs):
     """Quick move-target lookup.
@@ -309,7 +336,8 @@ def move_target(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('move-target', id_or_name, **kwargs)
+    return APIResource("move-target", id_or_name, **kwargs)
+
 
 def location(id_, **kwargs):
     """Quick location lookup.
@@ -320,7 +348,8 @@ def location(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('location', id_, **kwargs)
+    return APIResource("location", id_, **kwargs)
+
 
 def location_area(id_, **kwargs):
     """Quick location-area lookup.
@@ -331,7 +360,8 @@ def location_area(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('location-area', id_, **kwargs)
+    return APIResource("location-area", id_, **kwargs)
+
 
 def pal_park_area(id_or_name, **kwargs):
     """Quick pal-park-area lookup.
@@ -342,7 +372,8 @@ def pal_park_area(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pal-park-area', id_or_name, **kwargs)
+    return APIResource("pal-park-area", id_or_name, **kwargs)
+
 
 def region(id_or_name, **kwargs):
     """Quick region lookup.
@@ -353,7 +384,8 @@ def region(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('region', id_or_name, **kwargs)
+    return APIResource("region", id_or_name, **kwargs)
+
 
 def ability(id_or_name, **kwargs):
     """Quick ability lookup.
@@ -364,7 +396,8 @@ def ability(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('ability', id_or_name, **kwargs)
+    return APIResource("ability", id_or_name, **kwargs)
+
 
 def characteristic(id_, **kwargs):
     """Quick characteristic lookup.
@@ -375,7 +408,8 @@ def characteristic(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('characteristic', id_, **kwargs)
+    return APIResource("characteristic", id_, **kwargs)
+
 
 def egg_group(id_or_name, **kwargs):
     """Quick egg-group lookup.
@@ -386,7 +420,8 @@ def egg_group(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('egg-group', id_or_name, **kwargs)
+    return APIResource("egg-group", id_or_name, **kwargs)
+
 
 def gender(id_or_name, **kwargs):
     """Quick gender lookup.
@@ -397,7 +432,8 @@ def gender(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('gender', id_or_name, **kwargs)
+    return APIResource("gender", id_or_name, **kwargs)
+
 
 def growth_rate(id_or_name, **kwargs):
     """Quick growth-rate lookup.
@@ -408,7 +444,8 @@ def growth_rate(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('growth-rate', id_or_name, **kwargs)
+    return APIResource("growth-rate", id_or_name, **kwargs)
+
 
 def nature(id_or_name, **kwargs):
     """Quick nature lookup.
@@ -419,7 +456,8 @@ def nature(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('nature', id_or_name, **kwargs)
+    return APIResource("nature", id_or_name, **kwargs)
+
 
 def pokeathlon_stat(id_or_name, **kwargs):
     """Quick pokeathlon-stat lookup.
@@ -430,7 +468,8 @@ def pokeathlon_stat(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pokeathlon-stat', id_or_name, **kwargs)
+    return APIResource("pokeathlon-stat", id_or_name, **kwargs)
+
 
 def pokemon(id_or_name, **kwargs):
     """Quick pokemon lookup.
@@ -441,7 +480,19 @@ def pokemon(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pokemon', id_or_name, **kwargs)
+
+    def get_location_area_encounters(val):
+        params = val.split("/")[-3:]
+        params[1] = int(params[1])
+        return params
+
+    return APIResource(
+        "pokemon",
+        id_or_name,
+        custom={"location_area_encounters": get_location_area_encounters},
+        **kwargs
+    )
+
 
 def pokemon_color(id_or_name, **kwargs):
     """Quick pokemon-color lookup.
@@ -452,7 +503,8 @@ def pokemon_color(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pokemon-color', id_or_name, **kwargs)
+    return APIResource("pokemon-color", id_or_name, **kwargs)
+
 
 def pokemon_form(id_or_name, **kwargs):
     """Quick pokemon-form lookup.
@@ -463,7 +515,8 @@ def pokemon_form(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pokemon-form', id_or_name, **kwargs)
+    return APIResource("pokemon-form", id_or_name, **kwargs)
+
 
 def pokemon_habitat(id_or_name, **kwargs):
     """Quick pokemon-habitat lookup.
@@ -474,7 +527,8 @@ def pokemon_habitat(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pokemon-habitat', id_or_name, **kwargs)
+    return APIResource("pokemon-habitat", id_or_name, **kwargs)
+
 
 def pokemon_shape(id_or_name, **kwargs):
     """Quick pokemon-shape lookup.
@@ -485,7 +539,8 @@ def pokemon_shape(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pokemon-shape', id_or_name, **kwargs)
+    return APIResource("pokemon-shape", id_or_name, **kwargs)
+
 
 def pokemon_species(id_or_name, **kwargs):
     """Quick pokemon-species lookup.
@@ -496,7 +551,19 @@ def pokemon_species(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('pokemon-species', id_or_name, **kwargs)
+
+    def get_evolution_chain(val):
+        params = val["url"].split("/")[-3:-1]
+        params[1] = int(params[1])
+        return params
+
+    return APIResource(
+        "pokemon-species",
+        id_or_name,
+        custom={"evolution_chain": get_evolution_chain},
+        **kwargs
+    )
+
 
 def stat(id_or_name, **kwargs):
     """Quick stat lookup.
@@ -507,7 +574,8 @@ def stat(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('stat', id_or_name, **kwargs)
+    return APIResource("stat", id_or_name, **kwargs)
+
 
 def type_(id_or_name, **kwargs):
     """Quick type lookup.
@@ -518,7 +586,8 @@ def type_(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('type', id_or_name, **kwargs)
+    return APIResource("type", id_or_name, **kwargs)
+
 
 def language(id_or_name, **kwargs):
     """Quick language lookup.
@@ -529,8 +598,8 @@ def language(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource('language', id_or_name, **kwargs)
+    return APIResource("language", id_or_name, **kwargs)
+
 
 def sprite(sprite_type, sprite_id, **kwargs):
-
     return SpriteResource(sprite_type, sprite_id, **kwargs)
