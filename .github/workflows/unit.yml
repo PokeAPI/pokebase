@@ -1,9 +1,9 @@
-name: Python Unit tests
+name: Python tests
 
 on: [push, pull_request]
 
 jobs:
-  build:
+  unit:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -17,5 +17,21 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install -r requirements/test.txt
-      - name: Test
+      - name: Run unit tests
         run: python -m tests -v
+  style:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6]
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install -r requirements/test.txt
+      - name: Check style
+        run: flake8
