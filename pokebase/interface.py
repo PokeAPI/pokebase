@@ -31,8 +31,8 @@ def _make_obj(obj):
             id_ = int(url.split("/")[-2])  # ID of the data.
             endpoint = url.split("/")[-3]  # Where the data is located.
             return APIResource(endpoint, id_, lazy_load=True)
-        if all (k in obj for k in ("other", "back_default")):
-            obj = change_sprite_key(obj) # Change hyphens in sprite keys to underscores
+        if all(k in obj for k in ("other", "back_default")):
+            obj = change_sprite_key(obj)  # Change hyphens in sprite keys to underscores
 
         return APIMetadata(obj)
 
