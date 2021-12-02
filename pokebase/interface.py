@@ -17,12 +17,22 @@ def _make_obj(obj):
     APIResource or APIMetadata instance, depending on the data inputted.
     """
 
+    def change_sprite_key(d):
+        new_dict = {}
+        for k, v in d.items():
+            if isinstance(v, dict):
+                v = change_sprite_key(v)
+            new_dict[k.replace('-', '_')] = v
+        return new_dict
+
     if isinstance(obj, dict):
         if "url" in obj.keys():
             url = obj["url"]
             id_ = int(url.split("/")[-2])  # ID of the data.
             endpoint = url.split("/")[-3]  # Where the data is located.
             return APIResource(endpoint, id_, lazy_load=True)
+        if all (k in obj for k in ("other", "back_default")):
+            obj = change_sprite_key(obj) # Change hyphens in sprite keys to underscores
 
         return APIMetadata(obj)
 
