@@ -45,7 +45,7 @@ Usage
 <pokebase.interface.SpriteResource object at 0x7f2f15660860>
 >>> s1.url
 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png'
->>> s2 = pb.SpriteResource('pokemon', 1, other_sprites=True, official_artwork=True)
+>>> s2 = pb.SpriteResource('pokemon', 1, other=True, official_artwork=True)
 >>> s2.path
 '/home/user/.cache/pokebase/sprite/pokemon/other-sprites/official-artwork/1.png'
 >>> s3 = pb.SpriteResource('pokemon', 3, female=True, back=True)
