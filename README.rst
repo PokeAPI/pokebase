@@ -12,9 +12,9 @@ Maintainer: `GregHilmes <https://github.com/GregHilmes>`_
 =========
 Important
 =========
-pokebase is under heavy construction right now, in order to clean up the code
+pokebase is under heavy construction right now, to clean up the code
 and make it easier to maintain.  I recommend you continue using
-version 1.3.0, download via ``pip``. Once these new changes are stable, there will be another
+version 1.3.0, and download via ``pip``. Once these new changes are stable, there will be another
 PyPI release.
 
 Installation
@@ -26,7 +26,7 @@ It can't get much easier than that.
 
 Pokebase has been tested against Python 3.6 and Python 3.6 only. If this is too
 old for your needs, see the above note about the construction. Pokebase may
-function under other version of Python, but bugs may occur.
+function under other versions of Python, but bugs may occur.
 
 Usage
 =====
@@ -69,7 +69,7 @@ Nomenclature
 Testing
 =======
 
-Python unittests are in a separate ``tests`` directory, and can be run via
+Python unit tests are in a separate ``tests`` directory and can be run via
 ``python -m tests``.
 
 
