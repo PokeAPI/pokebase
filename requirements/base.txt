@@ -1,7 +1,14 @@
+# requirements.txt
 certifi==2023.7.22
 chardet==5.2.0
 idna==3.6
 requests==2.31.0
-urllib3==2.1.0
-isort~=5.9
-pre-commit~=2.13.0
+coverage==7.3.2
+hypothesis==6.92.0
+flake8==5.0.4
+
+# urllib3 version for Python 3.7
+urllib3==2.0.7; python_version=='3.7'
+
+# urllib3 version for Python 3.8 and above
+urllib3==2.1.0; python_version>='3.8'
