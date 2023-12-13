@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.6.15', '3.9.18', '3.12.0']
+        python-version: ['3.7', '3.8', '3.9.18', '3.10', '3.11', '3.12.0']
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -19,11 +19,31 @@ jobs:
         run: pip install -r requirements/test.txt
       - name: Run unit tests
         run: python -m tests -v
+
+  # due to error: "The version '3.6' with architecture 'x64' was not found for Ubuntu 22.04."
+  # test for python 3.6 is run on ubuntu 20.04
+  unit-3_6: # can't use 3.6 as job name
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: ['3.6']
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install -r requirements/test.txt
+      - name: Run unit tests
+        run: python -m tests -v
+
   style:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.6.15']
+        python-version: ['3.7']
     steps:
       - name: Clone repository
         uses: actions/checkout@v3

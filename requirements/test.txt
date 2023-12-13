@@ -6,4 +6,4 @@ requests==2.26.0
 urllib3==1.26.6
 coverage==5.5
 hypothesis==6.14.3
-flake8==3.9.2
+flake8==5.0.4
