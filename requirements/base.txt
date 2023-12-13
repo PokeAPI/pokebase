@@ -1,7 +1,7 @@
 certifi==2023.11.17
-chardet==5.0.0
+chardet==5.2.0
 idna==3.6
-requests==2.27.1
-urllib3==1.26.18
-isort~=5.9
-pre-commit~=2.13.0
+requests==2.31.1
+urllib3==2.1.0
+isort~=5.13.1
+pre-commit~=3.5.0
