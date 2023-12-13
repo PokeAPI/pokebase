@@ -2,7 +2,7 @@
 Pokebase |swampert|
 ===================
 
-|travis| |pypi|
+|actions| |pypi|
 
 pokebase is a simple but powerful Python interface to the
 `PokéAPI database <https://pokeapi.co/>`_
@@ -96,8 +96,8 @@ Do this :)
 .. |swampert| image::  https://veekun.com/dex/media/pokemon/main-sprites/heartgold-soulsilver/260.png
    :target: https://pokeapi.co/api/v2/pokemon/swampert
 
-.. |travis| image::  https://travis-ci.org/PokeAPI/pokebase.svg?branch=master
-   :target: https://travis-ci.org/PokeAPI/pokebase
+.. |actions| image::  https://github.com/PokeAPI/pokebase/actions/workflows/unit.yml/badge.svg
+   :target: https://github.com/PokeAPI/pokebase/actions/workflows/unit.yml
 
 .. |pypi| image:: https://img.shields.io/badge/pypi-1.3.0-blue.svg
    :target: https://pypi.python.org/pypi/pokebase
