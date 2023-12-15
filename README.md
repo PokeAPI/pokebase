@@ -2,7 +2,7 @@
 
 [![actions](https://github.com/PokeAPI/pokebase/actions/workflows/unit.yml/badge.svg)](https://github.com/PokeAPI/pokebase/actions/workflows/unit.yml)
 [![Python 3.6 pypi](https://img.shields.io/badge/Python%203.6%20pypi-1.3.0-blue.svg)](https://pypi.python.org/pypi/pokebase)
-[![Python >=3.8 github](https://img.shields.io/badge/Python%20>=3.8%20github-1.4.0-blue.svg)](https://pypi.python.org/pypi/pokebase)
+[![Python >=3.8 github](https://img.shields.io/badge/Python%20>=3.8%20github-1.4.0-blue.svg)](https://github.com/PokeAPI/pokebase#version-support)
 
 pokebase is a simple but powerful Python interface to the [PokéAPI
 database](https://pokeapi.co/)
@@ -11,13 +11,10 @@ Maintainer: [GregHilmes](https://github.com/GregHilmes)
 
 ## Installation
 
-`pip install pokebase`
-
-It can't get much easier than that.
 
 ### Version Support
 
-pokebase 1.3.0 supports Python 3.6
+pokebase 1.3.0 supports Python 3.6. Install it with `pip install pokebase`
 
 pokebase 1.4.0 drops support for Python 3.6 and adds support for Python
 \>=3.8 \<=3.12. Install it with
