@@ -1,7 +1,8 @@
 # Pokebase [![swampert](https://veekun.com/dex/media/pokemon/main-sprites/heartgold-soulsilver/260.png)](https://pokeapi.co/api/v2/pokemon/swampert)
 
 [![actions](https://github.com/PokeAPI/pokebase/actions/workflows/unit.yml/badge.svg)](https://github.com/PokeAPI/pokebase/actions/workflows/unit.yml)
-[![pypi](https://img.shields.io/badge/pypi-1.3.0-blue.svg)](https://pypi.python.org/pypi/pokebase)
+[![Python 3.6 pypi](https://img.shields.io/badge/Python%203.6%20pypi-1.3.0-blue.svg)](https://pypi.python.org/pypi/pokebase)
+[![Python >=3.8 github](https://img.shields.io/badge/Python%20>=3.8%20github-1.4.0-blue.svg)](https://pypi.python.org/pypi/pokebase)
 
 pokebase is a simple but powerful Python interface to the [PokéAPI
 database](https://pokeapi.co/)
@@ -14,15 +15,17 @@ Maintainer: [GregHilmes](https://github.com/GregHilmes)
 
 It can't get much easier than that.
 
-Pokebase has been tested against Python 3.6 and Python 3.6 only. If this
-is too old for your needs, see the above note about the construction.
-Pokebase may function under other versions of Python, but bugs may
-occur.
+### Version Support
+
+pokebase 1.3.0 supports Python 3.6
+
+pokebase 1.4.0 drops support for Python 3.6 and adds support for Python
+\>=3.8 \<=3.12. Install it with
+`pip install https://github.com/PokeAPI/pokebase/archive/1.4.0.zip`
 
 ## Usage
 
 ```python console
-
 >>> import pokebase as pb
 >>> chesto = pb.APIResource('berry', 'chesto')
 >>> chesto.name
@@ -44,15 +47,8 @@ chesto.natural_gift_type.name
 >>> s3 = pb.SpriteResource('pokemon', 3, female=True, back=True)
 >>> s3.img_data b'x89PNGrnx1anx00x00x00rIHDRx00x00x00 ... xca^x7fxbbd\*x00x00x00x00IENDxaeB`x82'
 ```
+
 ... And it's just that simple.
-
-## Version Support
-
-pokebase 1.3.0 supports Python 3.6
-
-pokebase 1.4.0 drops support for Python 3.6 and adds support for Python
-\>=3.8 \<=3.12. Install it with
-`pip install https://github.com/PokeAPI/pokebase/archive/1.4.0.zip`
 
 ## Nomenclature
 
@@ -80,6 +76,7 @@ do this, calling `set_cache` will not change your local copy of the
 variable.
 
 NOT THIS!
+
 ```python console
 >>> from pokebase.cache import API_CACHE
 ```
