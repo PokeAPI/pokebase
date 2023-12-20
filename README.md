@@ -4,7 +4,7 @@
 [![Python 3.6 pypi](https://img.shields.io/badge/Python%203.6%20pypi-1.3.0-blue.svg)](https://pypi.org/project/pokebase/1.3.0/)
 [![Python >=3.8 github](https://img.shields.io/badge/Python%20>=3.8%20github-1.4.1-blue.svg)](https://pypi.python.org/pypi/pokebase)
 
-pokebase is a simple but powerful Python interface to the [PokéAPIdatabase](https://pokeapi.co/)
+`pokebase`` is a simple but powerful Python interface to the [PokeAPI database](https://pokeapi.co/)
 
 Maintainer: [GregHilmes](https://github.com/GregHilmes)
 
