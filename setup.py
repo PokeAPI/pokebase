@@ -19,7 +19,7 @@ setuptools.setup(
     keywords=['database', 'pokemon', 'wrapper'],
     install_requires=['requests'],
     license='BSD License',
-    requires_python = ">=3.8",
+    requires_python=">=3.8",
     classifiers=[
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 3.8',
