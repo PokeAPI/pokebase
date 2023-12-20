@@ -1,24 +1,20 @@
 # Pokebase [![swampert](https://veekun.com/dex/media/pokemon/main-sprites/heartgold-soulsilver/260.png)](https://pokeapi.co/api/v2/pokemon/swampert)
 
 [![actions](https://github.com/PokeAPI/pokebase/actions/workflows/unit.yml/badge.svg)](https://github.com/PokeAPI/pokebase/actions/workflows/unit.yml)
-[![Python 3.6 pypi](https://img.shields.io/badge/Python%203.6%20pypi-1.3.0-blue.svg)](https://pypi.python.org/pypi/pokebase)
-[![Python >=3.8 github](https://img.shields.io/badge/Python%20>=3.8%20github-1.4.0-blue.svg)](https://github.com/PokeAPI/pokebase#version-support)
+[![Python 3.6 pypi](https://img.shields.io/badge/Python%203.6%20pypi-1.3.0-blue.svg)](https://pypi.org/project/pokebase/1.3.0/)
+[![Python >=3.8 github](https://img.shields.io/badge/Python%20>=3.8%20github-1.4.1-blue.svg)](https://pypi.python.org/pypi/pokebase)
 
-pokebase is a simple but powerful Python interface to the [PokéAPI
-database](https://pokeapi.co/)
+pokebase is a simple but powerful Python interface to the [PokéAPIdatabase](https://pokeapi.co/)
 
 Maintainer: [GregHilmes](https://github.com/GregHilmes)
 
 ## Installation
 
-
 ### Version Support
 
-pokebase 1.3.0 supports Python 3.6. Install it with `pip install pokebase`
+pokebase 1.3.0 supports Python 3.6. Install it with `pip install 'pokebase==1.3.0'`
 
-pokebase 1.4.0 drops support for Python 3.6 and adds support for Python
-\>=3.8 \<=3.12. Install it with
-`pip install https://github.com/PokeAPI/pokebase/archive/1.4.0.zip`
+pokebase 1.4.1 drops support for Python 3.6 and adds support for Python \>=3.8 \<=3.12. Install it with `pip install pokebase`
 
 ## Usage
 
@@ -62,15 +58,9 @@ Python unit tests are in a separate `tests` directory and can be run via
 
 ### Notes to the developer using this module
 
-The quick data lookup for a Pokémon type, is
-`pokebase.type_('type-name')`, not `pokebase.type('type-name')`. This is
-because of a naming conflict with the built-in `type` function, were you
-to `from pokebase import *`.
+The quick data lookup for a Pokémon type, is `pokebase.type_('type-name')`, not `pokebase.type('type-name')`. This is because of a naming conflict with the built-in `type` function, were you to `from pokebase import *`.
 
-When changing the cache, avoid importing the cache constants directly.
-You should only import them with the whole cache module. If you do not
-do this, calling `set_cache` will not change your local copy of the
-variable.
+When changing the cache, avoid importing the cache constants directly. You should only import them with the whole cache module. If you do not do this, calling `set_cache` will not change your local copy of the variable.
 
 NOT THIS!
 
