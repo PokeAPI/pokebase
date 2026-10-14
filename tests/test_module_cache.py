@@ -3,6 +3,7 @@
 import importlib
 import os
 import shelve
+import glob
 import unittest
 
 from hypothesis import assume, given
@@ -60,7 +61,7 @@ class TestFunction_save(unittest.TestCase):
            resource_id=integers(min_value=1))
     def testEnv_CacheFileNotFound(self, data, endpoint, resource_id):
         assume(data != dict())
-        os.remove(cache.API_CACHE)
+        cache.empty_cache()
         self.assertIsNone(cache.save(data, endpoint, resource_id))
 
     @given(data=dictionaries(text(), text()),
@@ -113,7 +114,7 @@ class TestFunction_load(unittest.TestCase):
     def testEnv_CacheFileNotFound(self, endpoint, resource_id):
         # ensure it exsists before we delete it,
         cache.set_cache('testing')
-        os.remove(cache.API_CACHE)
+        cache.empty_cache()
         with self.assertRaises(KeyError):
             cache.load(endpoint, resource_id)
 
@@ -168,8 +169,7 @@ class TestFunction_set_cache(unittest.TestCase):
     def testEnv_CacheDirNotFound(self):
         cache.set_cache('testing')
         os.rmdir(cache.SPRITE_CACHE)
-        if os.path.exists(cache.API_CACHE): os.remove(cache.API_CACHE)
-        os.rmdir(cache.CACHE_DIR)
+        cache.empty_cache()
         self.assertEqual(cache.set_cache(),
                          (cache.CACHE_DIR, cache.API_CACHE, cache.SPRITE_CACHE))
 

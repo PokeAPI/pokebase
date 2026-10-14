@@ -77,3 +77,9 @@ Do this :)
 >>> from pokebase import cache
 >>> cache.API_CACHE
 ```
+
+To delete the existing cache, don't delete files directly, as `shelve`'s file structure is platform-dependant. Indead, do
+```python console
+>>> from pokebase import cache
+>>> cache.empty_cache() 
+```

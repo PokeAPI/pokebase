@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import glob
 import os
 import shelve
 
@@ -9,6 +10,7 @@ from .common import cache_uri_build, sprite_filepath_build
 CACHE_DIR = None
 API_CACHE = None
 SPRITE_CACHE = None
+API_CACHE_FILE_NAME = "api.cache"
 
 
 def save(data, endpoint, resource_id=None, subresource=None):
@@ -137,10 +139,18 @@ def set_cache(new_path=None):
         new_path = get_default_cache()
 
     CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
-    API_CACHE = os.path.join(CACHE_DIR, "api.cache")
+    API_CACHE = os.path.join(CACHE_DIR, API_CACHE_FILE_NAME)
     SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, "sprite"))
 
     return CACHE_DIR, API_CACHE, SPRITE_CACHE
+
+
+def empty_cache():
+    """Depending on the database backend that shelve is using, different database files will be created.
+    Shelve does not offer a way to detect which one it has created, so this function catches all of them"""
+    for f in glob.glob(f"{API_CACHE}*"):
+        if os.path.exists(f):
+            os.remove(f)
 
 
 CACHE_DIR, API_CACHE, SPRITE_CACHE = set_cache()
