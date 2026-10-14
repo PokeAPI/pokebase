@@ -5,7 +5,7 @@
 [![Python >=3.8 github](https://img.shields.io/badge/Python%20>=3.8%20github-1.4.1-blue.svg)](https://pypi.python.org/pypi/pokebase)
 
 > [!WARNING]
-> Currently unsupported
+> Currently unsupported 
 
 `pokebase` is a simple but powerful Python interface to the [PokeAPI database](https://pokeapi.co/)
 
